@@ -10,7 +10,7 @@ const changelog = fs.readFileSync(path.join(root, 'CHANGELOG.md'), 'utf8');
 const script = html.match(/<script>([\s\S]*?)<\/script>/);
 assert.ok(script, 'inline game script exists');
 const checks = [
-  ['versioned save key', html.includes("SAVE_KEY='moonlitKeepSaveV25'") && html.includes('SAVE_VERSION=25')],
+  ['versioned save key', html.includes("SAVE_KEY='moonlitKeepSaveV27'") && html.includes('SAVE_VERSION=27')],
   ['continue/new-game menu', html.includes('id="continueBtn"') && html.includes('id="startBtn"')],
   ['save lifecycle hooks', html.includes("addEventListener('pagehide'") && html.includes("addEventListener('visibilitychange'")],
   ['periodic autosave', html.includes('Date.now()-lastSaveAt>5000')],
@@ -22,7 +22,7 @@ const checks = [
   ['secret discovery and hidden chest persist', html.includes('discoveredSecrets:[...discoveredSecrets]') && html.includes('{x:1590,y:205') && html.includes("discoveredSecrets=new Set")],
   ['expanded world collision and camera bounds', html.includes('const worldWidth=1800') && html.includes('{x:1440,y:226,w:360}')],
   ['pickup removal precedes save', /for\(let i=pickups\.length-1;i>=0;i--\)if\(pickups\[i\]\.collected\)pickups\.splice\(i,1\);if\(collectedAny\)saveGame/.test(html)],
-  ['service worker cache bumped', sw.includes('moonlit-keep-v25') && !sw.includes('moonlit-keep-v24')],
+  ['service worker cache bumped', sw.includes('moonlit-keep-v27') && !sw.includes('moonlit-keep-v26')],
   ['docs updated', readme.includes('v0.25 更新：隐藏房间与秘密通道') && changelog.includes('v0.25 — 隐藏房间、秘密通道与可探索区域')],
 ];
 for (const [name, passed] of checks) {
