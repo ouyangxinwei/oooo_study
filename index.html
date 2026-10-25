@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#101326">
+<meta name="description" content="Moonlit Keep — original pixel-art action platformer demo">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>Moonlit Keep · 月影古堡</title>
+<style>
+:root{color-scheme:dark;--bg:#101326;--panel:#191e38;--line:#343d67;--gold:#f6ce76;--ink:#f5f1dc;--muted:#aeb7d9;--red:#ff687a;--mint:#8be0bd}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:ui-monospace,SFMono-Regular,Consolas,monospace;touch-action:none}
+body{display:flex;align-items:center;justify-content:center}
+#app{width:min(100vw,900px);height:100dvh;max-height:1000px;display:flex;flex-direction:column;padding:10px;gap:8px;background:radial-gradient(ellipse at 50% 0%,#27264a 0%,#101326 65%)}
+header{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:42px}
+.brand{font-weight:900;letter-spacing:.06em;font-size:clamp(14px,3.6vw,20px);color:var(--gold)}
+.subtitle{font-size:10px;color:var(--muted);margin-top:3px}
+button{font:inherit;color:var(--ink);background:#252b4a;border:1px solid #4b5688;border-radius:9px;padding:9px 11px;cursor:pointer;touch-action:manipulation}
+button:active{transform:translateY(1px);filter:brightness(1.25)}
+#installBtn{display:none;color:#17192b;background:var(--gold);border-color:var(--gold);font-weight:bold}
+#headerActions{display:flex;gap:6px;align-items:center}
+#settingsBtn,#musicBtn,#cheatBtn,#pauseBtn,#demoBtn,#inventoryBtn{font-size:12px;padding:8px 9px}
+.inventory-section-title{color:var(--gold);font-size:13px;font-weight:900;margin:12px 0 5px}
+.inventory-note{font-size:11px;color:var(--muted);margin:3px 0 8px}
+#pauseBtn:disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:560px){#headerActions{gap:4px;flex-wrap:wrap;justify-content:flex-end}#settingsBtn,#musicBtn,#cheatBtn,#pauseBtn,#demoBtn,#inventoryBtn{font-size:10px;padding:7px 6px}.subtitle{font-size:9px}}
+#cheatBtn{border-color:#9a7544;color:#ffe0a1}
+.cheat-options{display:grid;gap:10px;margin:14px 0}
+.cheat-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#222844;border:1px solid #343d67;border-radius:8px;padding:12px;font-size:13px}
+.cheat-toggle button{min-width:86px;font-weight:900}
+.cheat-toggle button.enabled{background:#285844;border-color:#59bd8b;color:#d5ffea}
+#cheatNote{font:12px/1.5 system-ui,sans-serif;color:#aeb7d9}
+#settingsPanel{position:fixed;z-index:20;inset:0;background:#050817eF;display:none;align-items:center;justify-content:center;padding:16px}
+#settingsPanel.open{display:flex}
+.settings-card{width:min(100%,420px);max-height:90dvh;overflow:auto;background:#171d36;border:1px solid #515c91;border-radius:14px;padding:18px;box-shadow:0 12px 45px #0009}
+.settings-card h2{margin:0 0 8px;color:var(--gold);font-size:20px}
+.settings-card p{font:13px/1.5 system-ui,sans-serif;color:#d8def5}
+#keyRows{display:grid;gap:7px;margin:14px 0}
+.key-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:#222844;border:1px solid #343d67;border-radius:8px;padding:8px 10px;font-size:12px}
+.key-row button{min-width:112px;padding:7px 9px;font-size:12px}
+.key-row button.waiting{background:var(--gold);color:#17192b}
+.settings-actions{display:flex;gap:8px;flex-wrap:wrap}
+.settings-actions button{flex:1}
+#hud{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:11px}
+.stat{background:#181d35;border:1px solid var(--line);border-radius:8px;padding:7px 8px;min-width:0}
+.stat b{display:block;color:var(--gold);font-size:12px;margin-bottom:4px}
+.bar{height:7px;border-radius:5px;background:#343952;overflow:hidden}
+.fill{height:100%;width:100%;background:var(--red);transition:width .15s}
+#manaFill{background:#80caff}
+#questPanel{background:#181d35;border:1px solid var(--line);border-radius:8px;padding:7px 9px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 12px;font-size:10px;align-items:center}
+.quest-title{font-weight:900;color:var(--gold);font-size:11px}
+.quest-list{display:flex;flex-wrap:wrap;gap:4px 12px;color:var(--muted)}
+.quest-item.done{color:var(--mint)}
+.quest-progress{display:flex;align-items:center;gap:7px;min-width:100px}
+.quest-progress .bar{flex:1;min-width:48px}
+#questFill{background:var(--mint);width:0%}
+#questPercent{font-weight:900;color:var(--gold);min-width:28px;text-align:right}
+#stage{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;border:1px solid #343b65;border-radius:12px;overflow:hidden;background:#080d1d;box-shadow:0 10px 30px #0005}
+canvas{display:block;width:100%;height:100%;image-rendering:pixelated;touch-action:none}
+#overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#080d1dd9;padding:22px;text-align:center}
+#overlay.hidden{display:none}
+.dialog{max-width:430px;background:#171d36;border:1px solid #515c91;border-radius:14px;padding:20px;box-shadow:0 12px 45px #0009}
+.dialog h1{font-size:22px;color:var(--gold);margin:0 0 10px}
+.dialog p{font:13px/1.65 system-ui,sans-serif;color:#d8def5}
+.dialog button{margin-top:8px;background:var(--gold);color:#17192b;font-weight:900}
+#controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:center;padding-bottom:max(4px,env(safe-area-inset-bottom))}
+.pad{display:grid;grid-template-columns:repeat(3,minmax(42px,58px));gap:6px;justify-content:start}
+.actions{display:grid;grid-template-columns:repeat(2,minmax(62px,1fr));gap:7px;justify-content:end}
+.control{height:54px;border-radius:13px;background:#242a49eF;border:1px solid #586393;font-size:18px;font-weight:bold;user-select:none}
+.control small{display:block;font-size:9px;color:#c5cce9;font-weight:normal;margin-top:2px}
+.control.active{background:#525d8e}
+.pad .empty{visibility:hidden}
+.actions .control{height:58px;font-size:13px}
+#hint{font:11px/1.4 system-ui,sans-serif;text-align:center;color:var(--muted);padding-bottom:2px}
+@media(min-width:650px){#app{padding:14px;gap:10px}#controls{max-width:650px;width:100%;margin:0 auto}.control{height:58px}}
+</style>
+</head>
+<body>
+<div id="app">
+<header>
+ <div><div class="brand">MOONLIT KEEP <span style="color:#f5f1dc">/ 月影古堡</span></div><div class="subtitle">原创像素动作探索 Demo · 版本 0.20</div></div>
+ <div id="headerActions"><button id="pauseBtn" type="button" disabled>Ⅱ 暂停</button><button id="demoBtn" type="button">▶ 通关演示</button><button id="inventoryBtn" type="button">📋 查看物品清单</button><button id="musicBtn" type="button" aria-pressed="false">♫ 音乐：关闭</button><button id="settingsBtn" type="button">按键设置</button><button id="cheatBtn" type="button">作弊</button><button id="installBtn">安装到桌面</button></div>
+</header>
+<section id="hud">
+ <div class="stat"><b>生命 VIT <span id="hpText">100/100</span></b><div class="bar"><div class="fill" id="hpFill"></div></div></div>
+ <div class="stat"><b>灵力 AETHER <span id="mpText">30/30</span></b><div class="bar"><div class="fill" id="manaFill"></div></div></div>
+ <div class="stat"><b>战利品 / BOSS</b><span id="lootText">0 · 守门者未现身</span></div>
+</section>
+<section id="questPanel" aria-label="当前关卡任务"><div class="quest-title">当前关卡任务 · <span id="questStatus">进行中</span></div><div class="quest-progress"><div class="bar"><div class="fill" id="questFill"></div></div><span id="questPercent">0%</span></div><div class="quest-list"><span class="quest-item" id="minionTask">□ 清除小兵 0/4（60%）</span><span class="quest-item" id="bossTask">□ 击败守门者（最终目标 40%）</span></div></section>
+<div id="stage">
+ <canvas id="game" width="480" height="270" aria-label="月影古堡游戏画面"></canvas>
+ <div id="overlay"><div class="dialog"><h1>月影古堡</h1><p>月光落在被遗忘的古堡。挥动银鞭，穿过断桥与石廊，击败守门者。</p><p>操作：← → 移动 · ↑ 跳跃 · ↓ 下蹲躲避低位蓝色灵弹；跳跃躲避高位橙色灵弹 · L 奔跑（按住方向键同时按住）· J 挥鞭 · K 灵击。蝙蝠怕挥鞭、骷髅兵怕灵击、法师会远程施法、重甲骑士正面护甲坚硬，灵击或绕后更有效。靠近宝箱按 ↑ 开启，收集金币、药水与装备；在背包中装备武器、防具和饰品，再挑战守门者。</p><button id="startBtn">开始冒险</button><button id="startDemoBtn">观看通关演示</button></div></div>
+</div>
+<div id="controls">
+ <div class="pad">
+  <button class="control empty" aria-hidden="true">·</button>
+  <button class="control" data-key="up">▲<small>跳跃</small></button>
+  <button class="control empty" aria-hidden="true">·</button>
+  <button class="control" data-key="left">◀<small>左移</small></button>
+  <button class="control" data-key="down">▼<small>下蹲</small></button>
+  <button class="control" data-key="right">▶<small>右移</small></button>
+ </div>
+ <div class="actions">
+  <button class="control" data-key="sprint">奔跑 ⇢<small>按住加速</small></button>
+  <button class="control" data-key="attack">挥鞭<small>ATTACK</small></button>
+  <button class="control" data-key="magic">灵击 ✦<small>消耗 10 灵力</small></button>
+ </div>
+</div>
+<div id="hint">提示：按住方向键并同时按住「奔跑」可加速移动；按住 ↓ 或触屏「下蹲」可压低身形躲避低位蓝色灵弹；遇到高位橙色灵弹则要跳跃躲避。键盘默认 L 奔跑。靠近宝箱按 ↑ 开启；收集金币、生命/灵力药水和装备。点击「查看物品清单」可查看宝箱探索进度、消耗品与装备，并更换武器、防具、饰品，提升攻击、防御或移动速度。敌人会巡逻、发现、追击、攻击并返回原位。蝙蝠怕挥鞭；骷髅兵怕灵击；远程法师会发射魔弹；重甲骑士正面抗鞭，灵击或绕后更有效。击败敌人可回复少量生命与灵力。</div>
+</div>
+<div id="settingsPanel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle"><div class="settings-card"><h2 id="settingsTitle">键盘按键设置</h2><p>可以查看当前每个游戏操作对应的键盘按键，也可以点击按键进行替换。点击“等待按键”后，按下想使用的键即可。设置会保存在当前浏览器中。</p><div id="keyRows"></div><div class="settings-actions"><button id="resetKeysBtn" type="button">恢复默认</button><button id="closeSettingsBtn" type="button">完成</button></div></div></div>
+<div id="cheatPanel" role="dialog" aria-modal="true" aria-labelledby="cheatTitle" style="position:fixed;z-index:21;inset:0;background:#050817eF;display:none;align-items:center;justify-content:center;padding:16px"><div class="settings-card"><h2 id="cheatTitle">作弊功能</h2><p>仅用于单人练习和测试。开启后立即生效，可随时关闭。</p><div class="cheat-options"><div class="cheat-toggle"><span>♥ 无限生命<br><small style="color:#aeb7d9">受到攻击不扣血、不死亡</small></span><button id="infiniteHpBtn" type="button" aria-pressed="false">关闭</button></div><div class="cheat-toggle"><span>✦ 无限灵力<br><small style="color:#aeb7d9">释放灵击不消耗灵力</small></span><button id="infiniteMpBtn" type="button" aria-pressed="false">关闭</button></div></div><div id="cheatNote">当前作弊功能均已关闭。</div><div class="settings-actions" style="margin-top:14px"><button id="closeCheatBtn" type="button">完成</button></div></div></div>
+<div id="inventoryPanel" role="dialog" aria-modal="true" aria-labelledby="inventoryTitle" style="position:fixed;z-index:22;inset:0;background:#050817eF;display:none;align-items:center;justify-content:center;padding:16px"><div class="settings-card"><h2 id="inventoryTitle">物品清单</h2><p id="inventoryStats">攻击力 24 · 防御 0 · 移动速度 112</p><p id="inventoryGold">金币：0</p><div class="inventory-section-title">🧰 宝箱探索</div><p id="chestProgress" class="inventory-note">已开启 0 / 5</p><div id="inventoryChests" style="display:grid;gap:6px;margin:8px 0"></div><div class="inventory-section-title">🧪 消耗品</div><div id="inventoryConsumables" style="display:grid;gap:8px;margin:8px 0"></div><div class="inventory-section-title">⚔️ 装备清单</div><div id="inventoryItems" style="display:grid;gap:8px;margin:8px 0"></div><div class="settings-actions"><button id="closeInventoryBtn" type="button">关闭</button></div></div></div>
+<script>
+(() => {
+const canvas = document.getElementById('game'), ctx = canvas.getContext('2d');
+ctx.imageSmoothingEnabled = false;
+const W=480,H=270, keys={left:false,right:false,up:false,down:false,sprint:false,attack:false,magic:false};
+const hud={hpText:document.getElementById('hpText'),hpFill:document.getElementById('hpFill'),mpText:document.getElementById('mpText'),manaFill:document.getElementById('manaFill'),lootText:document.getElementById('lootText'),questFill:document.getElementById('questFill'),questPercent:document.getElementById('questPercent'),minionTask:document.getElementById('minionTask'),bossTask:document.getElementById('bossTask'),questStatus:document.getElementById('questStatus')};
+const overlay=document.getElementById('overlay');
+const cheat={infiniteHp:false,infiniteMp:false};
+function updateCheatUI(){const hpBtn=document.getElementById('infiniteHpBtn'),mpBtn=document.getElementById('infiniteMpBtn'),note=document.getElementById('cheatNote');[[hpBtn,cheat.infiniteHp],[mpBtn,cheat.infiniteMp]].forEach(([btn,on])=>{btn.textContent=on?'开启中':'关闭';btn.classList.toggle('enabled',on);btn.setAttribute('aria-pressed',String(on))});note.textContent=cheat.infiniteHp&&cheat.infiniteMp?'无限生命与无限灵力均已开启。':cheat.infiniteHp?'无限生命已开启。':cheat.infiniteMp?'无限灵力已开启。':'当前作弊功能均已关闭。';}
+function openCheats(){updateCheatUI();document.getElementById('cheatPanel').style.display='flex'}
+function closeCheats(){document.getElementById('cheatPanel').style.display='none'}
+document.getElementById('cheatBtn').addEventListener('click',openCheats);
+document.getElementById('closeCheatBtn').addEventListener('click',closeCheats);
+document.getElementById('cheatPanel').addEventListener('pointerdown',e=>{if(e.target.id==='cheatPanel')closeCheats()});
+document.getElementById('infiniteHpBtn').addEventListener('click',()=>{cheat.infiniteHp=!cheat.infiniteHp;if(cheat.infiniteHp){player.hp=100;player.dead=false;if(gameOver&&!won){gameOver=false;overlay.classList.add('hidden');running=true;last=performance.now();loopGeneration++;requestAnimationFrame(now=>loop(now,loopGeneration))}}updateCheatUI()});
+document.getElementById('infiniteMpBtn').addEventListener('click',()=>{cheat.infiniteMp=!cheat.infiniteMp;if(cheat.infiniteMp)player.mp=30;updateCheatUI()});
+// Original procedural castle ambience: generated locally with Web Audio (no external audio files).
+const musicBtn=document.getElementById('musicBtn');
+let audioCtx=null, musicTimer=null, musicOn=false, musicStep=0;
+const melody=[
+  {n:293.66,d:0.9},{n:349.23,d:0.6},{n:392.00,d:0.9},{n:349.23,d:0.6},
+  {n:261.63,d:0.9},{n:293.66,d:0.6},{n:233.08,d:1.2},{n:0,d:0.35},
+  {n:293.66,d:0.9},{n:349.23,d:0.6},{n:440.00,d:0.9},{n:392.00,d:0.6},
+  {n:349.23,d:0.9},{n:293.66,d:0.6},{n:261.63,d:1.2},{n:0,d:0.35}
+];
+function playMusicNote(){
+ if(!musicOn||!audioCtx)return;
+ const item=melody[musicStep%melody.length];musicStep++;
+ const now=audioCtx.currentTime;
+ if(item.n>0){
+  // Soft, bell-like lead with a quiet lower drone for a moonlit gothic atmosphere.
+  const osc=audioCtx.createOscillator(), gain=audioCtx.createGain();
+  osc.type='triangle';osc.frequency.setValueAtTime(item.n,now);
+  gain.gain.setValueAtTime(0.0001,now);gain.gain.exponentialRampToValueAtTime(0.035,now+0.04);gain.gain.exponentialRampToValueAtTime(0.0001,now+item.d*0.92);
+  osc.connect(gain);gain.connect(audioCtx.destination);osc.start(now);osc.stop(now+item.d);
+  if(musicStep%4===1){const bass=audioCtx.createOscillator(),bg=audioCtx.createGain();bass.type='sine';bass.frequency.setValueAtTime(item.n/2,now);bg.gain.setValueAtTime(0.0001,now);bg.gain.exponentialRampToValueAtTime(0.012,now+0.08);bg.gain.exponentialRampToValueAtTime(0.0001,now+1.1);bass.connect(bg);bg.connect(audioCtx.destination);bass.start(now);bass.stop(now+1.12)}
+ }
+ musicTimer=window.setTimeout(playMusicNote,Math.max(260,item.d*1000));
+}
+async function setMusic(on){
+ if(on){
+  try{const AudioContextClass=window.AudioContext||window.webkitAudioContext;if(!AudioContextClass){musicBtn.textContent='♫ 音乐不可用';return}if(!audioCtx)audioCtx=new AudioContextClass();if(audioCtx.state==='suspended')await audioCtx.resume();musicOn=true;musicBtn.textContent='♫ 音乐：开启';musicBtn.setAttribute('aria-pressed','true');playMusicNote()}catch(_e){musicOn=false;musicBtn.textContent='♫ 音乐：关闭';musicBtn.setAttribute('aria-pressed','false')}
+ }else{musicOn=false;if(musicTimer)window.clearTimeout(musicTimer);musicTimer=null;if(audioCtx&&audioCtx.state==='running')audioCtx.suspend();musicBtn.textContent='♫ 音乐：关闭';musicBtn.setAttribute('aria-pressed','false')}
+}
+musicBtn.addEventListener('click',()=>setMusic(!musicOn));
+let running=false, paused=false, gameOver=false, won=false, demoMode=false, demoCheatBackup=null, last=0, camera=0, tick=0, loot=0, bossSpawned=false, minionsDefeated=0, loopGeneration=0;
+const pauseBtn=document.getElementById("pauseBtn");
+const worldWidth=1440, floorY=226;
+const platforms=[
+ {x:0,y:226,w:290},{x:340,y:226,w:230},{x:620,y:226,w:210},{x:880,y:226,w:220},{x:1160,y:226,w:280},
+ {x:170,y:180,w:68},{x:400,y:174,w:82},{x:690,y:184,w:78},{x:940,y:174,w:78},{x:1210,y:180,w:90}
+];
+const player={x:45,y:180,w:16,h:28,standH:28,crouchH:16,crouching:false,vx:0,vy:0,hp:100,mp:30,face:1,onGround:false,attackT:0,attackDuration:.34,attackRange:43,attackStyle:'stand',attackHitIds:new Set(),magicT:0,invuln:0,anim:0,knockback:0,knockbackVx:0,animState:'idle',stateT:0,dead:false,hanging:false,hangPlatform:null,hangSide:'left'};
+const enemyStarts=[200,455,710,980];
+let enemies=[
+ {x:200,homeX:200,y:174,w:22,h:20,hp:38,max:38,vx:.55,kind:'bat',alive:true,cd:0,state:'patrol',alert:0,phase:0},
+ {x:455,homeX:455,y:198,w:20,h:28,hp:48,max:48,vx:-.4,kind:'skeleton',alive:true,cd:0,state:'patrol',alert:0,phase:0},
+ {x:710,homeX:710,y:198,w:20,h:28,hp:42,max:42,vx:.4,kind:'mage',alive:true,cd:0,state:'patrol',alert:0,phase:0},
+ {x:980,homeX:980,y:198,w:24,h:28,hp:88,max:88,vx:-.28,kind:'knight',alive:true,cd:0,state:'patrol',alert:0,phase:0}
+];
+const boss={x:1300,y:174,w:38,h:52,hp:240,max:240,vx:-0.5,alive:true,cd:1.2,flash:0,attackSeq:0,attackType:'low'};
+const projectiles=[];
+const equipmentSlots={weapon:null,armor:null,accessory:null};
+const inventory={gold:0,items:[],hpPotions:0,mpPotions:0,openedChests:new Set()};
+const gearCatalog={
+ silverWhip:{id:'silverWhip',name:'银月长鞭',slot:'weapon',attack:8,defense:0,speed:0,desc:'攻击力 +8'},
+ moonBlade:{id:'moonBlade',name:'月影短刃',slot:'weapon',attack:13,defense:0,speed:0,desc:'攻击力 +13'},
+ guardianArmor:{id:'guardianArmor',name:'守夜重甲',slot:'armor',attack:0,defense:5,speed:-8,desc:'防御 +5，移动速度 -8'},
+ travelerCloak:{id:'travelerCloak',name:'旅者披风',slot:'armor',attack:0,defense:2,speed:8,desc:'防御 +2，移动速度 +8'},
+ swiftCharm:{id:'swiftCharm',name:'疾风护符',slot:'accessory',attack:2,defense:0,speed:18,desc:'攻击力 +2，移动速度 +18'},
+ moonPendant:{id:'moonPendant',name:'月光吊坠',slot:'accessory',attack:0,defense:3,speed:0,desc:'防御 +3'}
+};
+const chests=[{x:125,y:205,w:18,h:16,contents:['gold','hp']},{x:365,y:205,w:18,h:16,contents:['silverWhip','gold']},{x:645,y:205,w:18,h:16,contents:['mp','travelerCloak']},{x:900,y:205,w:18,h:16,contents:['guardianArmor','gold']},{x:1085,y:205,w:18,h:16,contents:['moonBlade','swiftCharm','moonPendant']}];
+const pickups=[];
+function equippedBonus(key){return Object.values(equipmentSlots).reduce((n,item)=>n+(item?(item[key]||0):0),0)}
+function currentAttack(){return 24+equippedBonus('attack')}
+function currentDefense(){return equippedBonus('defense')}
+function currentSpeed(){return Math.max(70,112+equippedBonus('speed'))}
+function updateInventoryUI(){
+ document.getElementById('inventoryStats').textContent=`攻击力 ${currentAttack()} · 防御 ${currentDefense()} · 移动速度 ${currentSpeed()}`;
+ document.getElementById('inventoryGold').textContent=`金币：${inventory.gold}`;
+ const chestList=document.getElementById('inventoryChests');chestList.innerHTML='';
+ const opened=chests.filter(c=>inventory.openedChests.has(c.x)).length;
+ document.getElementById('chestProgress').textContent=`已开启 ${opened} / ${chests.length} · 未开启 ${chests.length-opened}`;
+ chests.forEach((chest,index)=>{const row=document.createElement('div');row.className='key-row';const label=document.createElement('span');label.textContent=`宝箱 ${index+1} · ${inventory.openedChests.has(chest.x)?'已开启':'未开启'}`;const detail=document.createElement('span');detail.textContent=inventory.openedChests.has(chest.x)?'奖励已掉落':'关卡探索';detail.style.color=inventory.openedChests.has(chest.x)?'var(--mint)':'var(--muted)';row.append(label,detail);chestList.append(row)});
+ const consumables=document.getElementById('inventoryConsumables');consumables.innerHTML='';
+ const potionRow=document.createElement('div');potionRow.className='key-row';const hpLabel=document.createElement('span');hpLabel.textContent=`♥ 生命药水 × ${inventory.hpPotions}（恢复 30 HP）`;const hpBtn=document.createElement('button');hpBtn.type='button';hpBtn.textContent='使用';hpBtn.disabled=inventory.hpPotions<1||player.hp>=100;hpBtn.onclick=()=>{if(inventory.hpPotions>0&&player.hp<100){inventory.hpPotions--;player.hp=Math.min(100,player.hp+30);updateInventoryUI()}};potionRow.append(hpLabel,hpBtn);consumables.append(potionRow);
+ const mpRow=document.createElement('div');mpRow.className='key-row';const mpLabel=document.createElement('span');mpLabel.textContent=`✦ 灵力药水 × ${inventory.mpPotions}（恢复 15 MP）`;const mpBtn=document.createElement('button');mpBtn.type='button';mpBtn.textContent='使用';mpBtn.disabled=inventory.mpPotions<1||player.mp>=30;mpBtn.onclick=()=>{if(inventory.mpPotions>0&&player.mp<30){inventory.mpPotions--;player.mp=Math.min(30,player.mp+15);updateInventoryUI()}};mpRow.append(mpLabel,mpBtn);consumables.append(mpRow);
+ const list=document.getElementById('inventoryItems');list.innerHTML='';
+ const slotNames={weapon:'武器',armor:'防具',accessory:'饰品'};
+ Object.keys(slotNames).forEach(slot=>{const row=document.createElement('div');row.className='key-row';const equipped=equipmentSlots[slot];const label=document.createElement('span');label.textContent=`当前${slotNames[slot]}：${equipped?equipped.name:'未装备'}`;row.append(label);list.append(row)});
+ const seen=new Set();inventory.items.forEach(id=>{const item=gearCatalog[id];if(!item||seen.has(id))return;seen.add(id);const row=document.createElement('div');row.className='key-row';const label=document.createElement('span');label.textContent=`${item.name}（${slotNames[item.slot]} · ${item.desc}）${equipmentSlots[item.slot]?.id===id?' · 已装备':''}`;const btn=document.createElement('button');btn.type='button';btn.textContent=equipmentSlots[item.slot]?.id===id?'已装备':'装备';btn.disabled=equipmentSlots[item.slot]?.id===id;btn.onclick=()=>{equipmentSlots[item.slot]=item;updateInventoryUI()};row.append(label,btn);list.append(row)});
+ if(!inventory.items.length){const empty=document.createElement('p');empty.className='inventory-note';empty.textContent='还没有获得装备。开启宝箱或击败怪物寻找装备吧。';list.append(empty)}
+}
+function openInventory(){updateInventoryUI();document.getElementById('inventoryPanel').style.display='flex'}
+function closeInventory(){document.getElementById('inventoryPanel').style.display='none'}
+document.getElementById('inventoryBtn').addEventListener('click',openInventory);
+document.getElementById('closeInventoryBtn').addEventListener('click',closeInventory);
+document.getElementById('inventoryPanel').addEventListener('pointerdown',e=>{if(e.target.id==='inventoryPanel')closeInventory()});
+function spawnPickup(type,x,y){pickups.push({type,x,y,w:10,h:10,phase:Math.random()*6.28})}
+// V18: each defeated monster independently has a 50% chance to drop one reward.
+const MONSTER_DROP_CHANCE=0.5;
+function dropFromMonster(monster){
+ if(Math.random()>=MONSTER_DROP_CHANCE)return;
+ const roll=Math.random();let type;
+ if(roll<0.35)type='gold';
+ else if(roll<0.55)type='hp';
+ else if(roll<0.75)type='mp';
+ else {const owned=new Set(inventory.items);const available=Object.keys(gearCatalog).filter(id=>!owned.has(id));type=available.length?available[Math.floor(Math.random()*available.length)]:['gold','hp','mp'][Math.floor(Math.random()*3)];}
+ spawnPickup(type,monster.x+monster.w/2-5,monster.y+Math.max(0,monster.h/2));
+}
+function openChest(chest){if(inventory.openedChests.has(chest.x))return;inventory.openedChests.add(chest.x);chest.open=true;chest.contents.forEach((type,i)=>spawnPickup(type,chest.x+6+i*5,chest.y-13));}
+function collectPickup(p){if(p.type==='gold'){inventory.gold+=10;loot++}else if(p.type==='hp'){inventory.hpPotions++}else if(p.type==='mp'){inventory.mpPotions++}else if(gearCatalog[p.type]){if(!inventory.items.includes(p.type))inventory.items.push(p.type)}updateInventoryUI()}
+// Quest progress: minion clear contributes 60%; boss damage contributes up to 40%, and victory is exactly 100%.
+function rect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),w,h)}
+function text(t,x,y,c='#f5f1dc',size=8){ctx.fillStyle=c;ctx.font=`bold ${size}px monospace`;ctx.fillText(t,Math.round(x),Math.round(y))}
+function drawBackground(){
+ rect(0,0,W,H,'#0a1025');
+ // moon and stars
+ rect(365-camera*.04,24,30,30,'#d5d8ed');rect(372-camera*.04,18,30,30,'#0a1025');
+ for(let i=0;i<38;i++){let x=((i*71-camera*.18)%W+W)%W,y=(i*37)%112;rect(x,y,1,1,i%4?'#9ba9d4':'#f6ce76')}
+ // castle silhouettes
+ for(let i=0;i<8;i++){let x=((i*100-camera*.28)%600+600)%600-40;rect(x,82,60,110,'#171d3a');rect(x+8,66,10,24,'#222949');rect(x+38,58,12,32,'#222949');rect(x+25,101,10,18,'#080d1d')}
+ // distant arches
+ for(let i=0;i<6;i++){let x=((i*115-camera*.48)%600+600)%600-30;rect(x,137,55,60,'#242b4b');rect(x+8,146,39,51,'#0b1127');rect(x+13,151,29,46,'#101832')}
+}
+function drawPlatform(p){
+ const x=p.x-camera;if(x+p.w<0||x>W)return;
+ rect(x,p.y,p.w,H-p.y,'#33324b');rect(x,p.y,p.w,4,'#b7a36e');
+ for(let xx=0;xx<p.w;xx+=16){rect(x+xx,p.y+8,1,Math.max(0,H-p.y-8),'#45425d');rect(x+xx+5,p.y+17,7,1,'#242a43')}
+}
+function drawHero(){
+ const x=player.x-camera, y=player.y;
+ const state=player.animState;
+ const phase=player.anim*12;
+ const runPhase=Math.sin(phase*1.35);
+ const idleBreath=Math.sin(phase*.45)*.7;
+ const isRun=state==='run', isJump=state==='jump', isFall=state==='fall';
+ const isAttack=state==='attack', isHurt=state==='hurt', isDead=state==='dead', isCrouch=state==='crouch'||(state==='attack'&&player.attackStyle==='crouch'), isHang=state==='hang';
+ const bob=isCrouch?0:isRun?Math.abs(runPhase)*1.5:isJump?-1.5:isFall?1.5:idleBreath;
+ const legSwing=isRun?runPhase*3.4:0;
+ const hurtFlash=isHurt || (player.invuln>0 && Math.floor(tick*18)%2===0);
+ if(hurtFlash)ctx.globalAlpha=.55;
+ if(isDead){
+   // Death pose: fallen body, dropped head silhouette and fading cape.
+   ctx.save();ctx.translate(x+8,y+player.h-5);ctx.rotate(player.face===1?.9:-.9);
+   rect(-8,-13,15,8,'#c6c9d8');rect(-10,-12,5,7,'#8f2949');rect(4,-16,7,7,'#e8c6a1');rect(4,-18,8,3,'#4b2d3d');rect(-7,-5,6,3,'#8a6b58');rect(4,-6,7,3,'#8a6b58');ctx.restore();ctx.globalAlpha=1;return;
+ }
+ // Ledge-grab pose: arms visibly reach for the platform edge.
+ if(isHang){rect(x+3,y+8,10,12,'#8f2949');rect(x+4,y+8,10,10,'#c6c9d8');rect(x+6,y+10,7,6,'#2d4d72');rect(x+4,y+1,10,8,'#e8c6a1');rect(x+3,y,11,4,'#4b2d3d');rect(x+(player.hangSide==='left'?12:-2),y+2,5,3,'#e8c6a1');rect(x+2,y+18,5,4,'#b7bfd9');rect(x+10,y+18,5,4,'#b7bfd9');rect(x+1,y+22,5,3,'#8a6b58');rect(x+10,y+22,5,3,'#8a6b58');ctx.globalAlpha=1;return}
+ // Crouch pose lowers the head and folds the cape to make the low profile readable.
+ if(isCrouch){rect(x+3,y+player.h-5,10,4,'#8f2949');rect(x+5,y+player.h-3,6,3,'#c34c68');rect(x+2,y+player.h-10,12,6,'#c6c9d8');rect(x+7,y+player.h-14,8,7,'#e8c6a1');rect(x+8,y+player.h-15,8,3,'#4b2d3d');rect(x+1,y+player.h-5,5,3,'#8a6b58');rect(x+11,y+player.h-5,5,3,'#8a6b58');if(player.attackT>0&&player.attackStyle==='crouch'){const progress=1-player.attackT/player.attackDuration;const sx=x+(player.face===1?13:3),sy=y+player.h-9,reach=player.attackRange;let ex=sx+player.face*(progress<.28?9:progress<.68?reach:reach*.65),ey=sy+(progress<.28?-2:progress<.68?-1:4);ctx.strokeStyle='#f6ce76';ctx.lineWidth=2.5;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(sx,sy);ctx.quadraticCurveTo(sx+player.face*reach*.52,sy-3,ex,ey);ctx.stroke();rect(ex-1,ey-1,4,3,'#fff0b0')}ctx.globalAlpha=1;return}
+ // Cape reacts to movement and hurt/attack poses.
+ const capeShift=isAttack?player.face*2:isHurt?-2:Math.sin(phase*.7)*1.5;
+ rect(x+3+capeShift,y+9+bob,player.face===1?7:6,13,'#8f2949');
+ rect(x+(player.face===1?2:10)+capeShift,y+12+bob,3,6,'#c34c68');
+ // Legs use separate poses for running, jumping, falling, and recoil.
+ if(isJump){rect(x+3,y+18+bob,5,5,'#b7bfd9');rect(x+10,y+17+bob,4,6,'#b7bfd9');rect(x+1,y+22+bob,5,3,'#8a6b58');rect(x+10,y+22+bob,5,3,'#8a6b58')}
+ else if(isFall){rect(x+3,y+18+bob,5,6,'#b7bfd9');rect(x+10,y+19+bob,4,6,'#b7bfd9');rect(x+1,y+23+bob,5,3,'#8a6b58');rect(x+10,y+24+bob,5,3,'#8a6b58')}
+ else if(isHurt){rect(x+2,y+18,5,6,'#b7bfd9');rect(x+10,y+17,5,6,'#b7bfd9');rect(x,y+23,5,3,'#8a6b58');rect(x+11,y+23,5,3,'#8a6b58')}
+ else {rect(x+4+legSwing,y+17+bob,4,7,'#b7bfd9');rect(x+10-legSwing,y+17+bob,4,7,'#b7bfd9');rect(x+2+legSwing,y+24+bob,5,4,'#8a6b58');rect(x+10-legSwing,y+24+bob,5,4,'#8a6b58')}
+ // Torso lean communicates action state.
+ const lean=isAttack?player.face*1.5:isHurt?-player.face*2:isJump?player.face*.5:0;
+ rect(x+3+lean,y+8+bob,11,11,'#c6c9d8');rect(x+5+lean,y+10+bob,7,7,'#2d4d72');
+ rect(x+2+lean,y+9+bob,3,7,'#e2d7c6');
+ // Head and hair; hurt pose lowers the head slightly.
+ const headDrop=isHurt?2:0;
+ rect(x+4+lean,y+1+bob+headDrop,10,8,'#e8c6a1');rect(x+3+lean,y+bob+headDrop,11,4,'#4b2d3d');rect(x+11+lean,y+4+bob+headDrop,3,2,'#191d31');
+ // Attack wind-up, active swing, and recovery are distinct visual phases.
+ if(player.attackT>0){
+   const progress=1-player.attackT/player.attackDuration;const reach=player.attackRange;
+   const sx=x+(player.face===1?13:3),sy=y+12+bob;
+   let ex,ey,mx,my;
+   if(progress<.28){ex=sx+player.face*9;ey=sy-8;mx=sx+player.face*4;my=sy-7}
+   else if(progress<.68){ex=sx+player.face*reach;ey=sy+Math.sin((progress-.28)/.4*Math.PI)*-9;mx=sx+player.face*reach*.53;my=sy-8}
+   else {ex=sx+player.face*(reach*.65);ey=sy+5;mx=sx+player.face*reach*.42;my=sy+2}
+   ctx.strokeStyle='#f6ce76';ctx.lineWidth=2.5;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(sx,sy);ctx.quadraticCurveTo(mx,my,ex,ey);ctx.stroke();rect(ex-1,ey-1,4,3,'#fff0b0');
+   if(progress>.25&&progress<.72){ctx.strokeStyle='#fff0b077';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(sx,sy-3);ctx.lineTo(ex-player.face*6,ey-5);ctx.stroke()}
+ }
+ if(player.magicT>0){rect(x-4,y-4,24,36,'#7b9cff33');rect(x+5,y+3,6,2,'#b7d7ff')}
+ ctx.globalAlpha=1;
+}
+function drawEnemy(e){
+ const x=e.x-camera,y=e.y;if(x<-40||x>W+40)return;
+ if(e.hitFlash>0){ctx.globalAlpha=.55;e.hitFlash=Math.max(0,e.hitFlash-.025)}
+ if(e.kind==='bat'){
+  rect(x+4,y+6,14,9,'#554b83');rect(x+7,y+3,8,8,'#8c7ac4');rect(x+9,y+6,2,2,'#ff687a');rect(x+13,y+6,2,2,'#ff687a');
+  const wing=Math.sin(tick*18+e.phase)>0?3:0;rect(x+wing,y+5,5,7,'#7264a8');rect(x+16-wing,y+5,5,7,'#7264a8');rect(x+8,y+14,2,4,'#d7c9f5');rect(x+14,y+14,2,4,'#d7c9f5');
+ }else if(e.kind==='skeleton'){
+  rect(x+4,y+3,12,9,'#d9d5c5');rect(x+5,y+6,3,3,'#24253c');rect(x+12,y+6,3,3,'#24253c');rect(x+7,y+10,7,2,'#786b65');rect(x+3,y+13,14,10,'#737c92');rect(x+4,y+23,4,5,'#d9d5c5');rect(x+13,y+23,4,5,'#d9d5c5');rect(x+18,y+12,2,13,'#b9b4a2');rect(x+17,y+10,4,4,'#e5dfcc');
+ }else if(e.kind==='mage'){
+  rect(x+3,y+2,15,9,'#453b78');rect(x+1,y+8,19,4,'#6d5db0');rect(x+4,y+11,13,13,'#544a91');rect(x+7,y+6,3,3,'#8bd9ff');rect(x+13,y+6,3,3,'#8bd9ff');rect(x+6,y+24,4,4,'#302c58');rect(x+13,y+24,4,4,'#302c58');rect(x+19,y+13,3,9,'#b7a5e9');rect(x+18,y+10,5,5,'#8bd9ff');
+ }else if(e.kind==='knight'){
+  rect(x+4,y+2,16,9,'#b8c3d5');rect(x+3,y+5,18,5,'#727e9b');rect(x+7,y+6,10,3,'#ffcf77');rect(x+2,y+11,20,12,'#5e6b87');rect(x+4,y+13,16,7,'#a8b5cb');rect(x+1,y+12,5,12,'#c0cada');rect(x+18,y+12,5,12,'#c0cada');rect(x+4,y+23,6,5,'#77829b');rect(x+15,y+23,6,5,'#77829b');rect(x+21,y+13,3,13,'#b9c5d8');
+ }
+ rect(x,y-5,e.w,3,'#383b51');rect(x,y-5,e.w*Math.max(0,e.hp/e.max),3,'#ff687a');
+ if(e.state==='chase')text('!',x+e.w/2-2,y-10,'#ffce79',7);
+ ctx.globalAlpha=1;
+}
+function drawBoss(){
+ if(!bossSpawned||!boss.alive)return;
+ let x=boss.x-camera,y=boss.y;if(x<-70||x>W+70)return;
+ rect(x+7,y+7,24,40,boss.flash?'#fff2c9':'#353653');
+ rect(x+3,y+2,32,15,boss.flash?'#fff2c9':'#5e476c');
+ rect(x+7,y-3,6,8,'#c6a1db');rect(x+25,y-3,6,8,'#c6a1db');
+ rect(x+10,y+10,5,4,'#ffcf77');rect(x+24,y+10,5,4,'#ffcf77');
+ rect(x+2,y+22,8,17,'#6e577d');rect(x+28,y+22,8,17,'#6e577d');
+ rect(x+8,y+44,8,8,'#a5a5bc');rect(x+23,y+44,8,8,'#a5a5bc');
+ rect(x-7,y+18,8,4,'#d8c4e8');rect(x+36,y+18,8,4,'#d8c4e8');
+ rect(x,y-10,boss.w,4,'#383b51');rect(x,y-10,boss.w*Math.max(0,boss.hp/boss.max),4,'#ff687a');
+}
+function drawWorld(){
+ drawBackground();
+ platforms.forEach(drawPlatform);
+ // Treasure chests and collectible rewards.
+ chests.forEach(c=>{const x=c.x-camera;if(x<-30||x>W+30)return;rect(x,c.y+5,c.w,c.h-5,c.open?'#5c4938':'#8a5a37');rect(x-1,c.y+2,c.w+2,7,c.open?'#6e5948':'#d49a4d');rect(x+7,c.y+7,4,5,'#f6ce76');if(!c.open)rect(x+7,c.y-1,4,4,'#ffe7a0');if(!c.open&&Math.abs((player.x+player.w/2)-(c.x+c.w/2))<30)text('↑ 开宝箱',x-8,c.y-7,'#ffe7a0',7)});
+ pickups.forEach(p=>{const x=p.x-camera;if(x<-20||x>W+20)return;const bob=Math.sin(tick*5+p.phase)*2;const color=p.type==='gold'?'#f6ce76':p.type==='hp'?'#ff687a':p.type==='mp'?'#80caff':p.type==='silverWhip'||p.type==='moonBlade'?'#d7e4ff':p.type==='guardianArmor'||p.type==='travelerCloak'?'#aeb7d9':'#c59aff';rect(x,p.y+bob,8,8,color);rect(x+2,p.y+bob-2,4,12,color)});
+ enemies.forEach(e=>{if(e.alive)drawEnemy(e)});
+ drawBoss();drawHero();
+ projectiles.forEach(p=>{let x=p.x-camera;const hostile=p.hostile;const glow=hostile?(p.attackType==='high'?'#ffb56b':p.attackType==='mage'?'#c59aff':'#8bd9ff'):'#8bd9ff';const core=hostile?(p.attackType==='high'?'#fff0a6':p.attackType==='mage'?'#f0d8ff':'#d8f6ff'):'#d8f6ff';rect(x,p.y,8,5,glow);rect(x+2,p.y-2,4,9,core)});
+ // area label
+ text(camera<500?'THE BROKEN COURT':camera<950?'THE ASHEN GALLERY':'THE GATEKEEPER HALL',12,15,'#f6ce76',8);
+ if(bossSpawned&&boss.alive&&Math.abs(player.x-boss.x)<300){text('GATEKEEPER',W-86,15,'#ff9aaa',8);text('高位橙弹：跳跃  /  低位蓝弹：下蹲',W-190,27,boss.attackType==='high'?'#ffbd78':'#8bd9ff',7)}
+}
+function overlaps(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y}
+function hurt(amount){if(player.invuln>0||player.dead)return;if(cheat.infiniteHp){player.hp=100;player.invuln=.25;return}player.hp=Math.max(0,player.hp-Math.max(1,amount-currentDefense()));player.invuln=1.0;player.knockback=.22;player.knockbackVx=player.x<((bossSpawned&&boss.alive)?boss.x:player.x+player.face*20)?-90:90;player.vy=-75;player.animState='hurt';player.stateT=.28;if(player.hp<=0){player.dead=true;player.animState='dead';gameOver=true;showEnd(false)}}
+function showEnd(win){if(demoMode){demoMode=false;if(demoCheatBackup){cheat.infiniteHp=demoCheatBackup.infiniteHp;cheat.infiniteMp=demoCheatBackup.infiniteMp;demoCheatBackup=null;updateCheatUI()}}running=false;paused=false;pauseBtn.textContent='Ⅱ 暂停';pauseBtn.disabled=true;overlay.classList.remove('hidden');overlay.querySelector('.dialog').innerHTML=win?'<h1>古堡沉寂了</h1><p>守门者已被击败。月光重新照亮了古堡长廊。</p><p>这是一个原创功能 Demo；可点击下方重新开始。</p><button id="restartBtn">再玩一次</button>':'<h1>你倒下了</h1><p>古堡仍在等待下一位挑战者。重新开始，再试一次吧。</p><button id="restartBtn">重新挑战</button>';document.getElementById('restartBtn').onclick=resetGame}
+function updateQuest(){const total=enemies.length;const minionRatio=total?minionsDefeated/total:1;const bossRatio=boss.alive?1-boss.hp/boss.max:1;const progress=won?100:Math.min(99,Math.round(minionRatio*60+bossRatio*40));hud.questFill.style.width=progress+'%';hud.questPercent.textContent=progress+'%';hud.minionTask.textContent=(minionsDefeated>=total?'✓':'□')+' 清除小兵 '+minionsDefeated+'/'+total+'（60%）';hud.minionTask.classList.toggle('done',minionsDefeated>=total);hud.bossTask.textContent=(won?'✓':'□')+' 击败守门者（最终目标 40%）';hud.bossTask.classList.toggle('done',won);hud.questStatus.textContent=won?'全部完成':(bossSpawned?'Boss 战斗中':'探索中');}
+function registerMinionDefeat(e){if(e.alive){e.alive=false;loot++;minionsDefeated++;dropFromMonster(e);player.hp=Math.min(100,player.hp+7);player.mp=Math.min(30,player.mp+5);updateQuest();}}
+function registerBossDefeat(){if(!boss.alive)return;dropFromMonster(boss);boss.alive=false;won=true;updateQuest();showEnd(true)}
+function resetGame(){demoMode=false;paused=false;pauseBtn.textContent='Ⅱ 暂停';pauseBtn.disabled=false;Object.keys(keys).forEach(k=>keys[k]=false);document.querySelectorAll('[data-key]').forEach(btn=>btn.classList.remove('active'));player.x=45;player.y=180;player.vx=0;player.vy=0;player.hanging=false;player.hangPlatform=null;player.hp=100;player.mp=30;player.invuln=0;player.attackT=0;player.magicT=0;player.attackHitIds=new Set();player.knockback=0;player.knockbackVx=0;player.animState='idle';player.stateT=0;player.dead=false;player.anim=0;player.crouching=false;player.h=player.standH;camera=0;loot=0;minionsDefeated=0;bossSpawned=false;inventory.gold=0;inventory.hpPotions=0;inventory.mpPotions=0;inventory.items=[];inventory.openedChests.clear();Object.keys(equipmentSlots).forEach(k=>equipmentSlots[k]=null);pickups.length=0;chests.forEach(c=>c.open=false);updateInventoryUI();boss.x=1300;boss.hp=boss.max;boss.alive=true;boss.cd=1.2;boss.flash=0;boss.attackSeq=0;boss.attackType='low';enemies.forEach((e,i)=>{e.alive=true;e.hp=e.max;e.x=enemyStarts[i];e.homeX=enemyStarts[i];e.y=e.kind==='bat'?174:198;e.cd=0;e.state='patrol';e.alert=0;e.phase=0;e.hitFlash=0});projectiles.length=0;gameOver=false;won=false;updateQuest();overlay.classList.add('hidden');overlay.querySelector('.dialog').innerHTML='';running=true;last=performance.now();loopGeneration++;requestAnimationFrame(now=>loop(now,loopGeneration))}
+function attack(){
+ if(player.attackT>0||player.hanging||player.dead)return;
+ player.attackStyle=(keys.down&&player.onGround)||player.crouching?'crouch':'stand';
+ if(player.attackStyle==='crouch'&&!player.crouching){player.y+=player.standH-player.crouchH;player.h=player.crouchH;player.crouching=true;}
+ player.attackDuration=player.attackStyle==='crouch'?.38:.34;
+ player.attackRange=player.attackStyle==='crouch'?34:43;
+ player.attackT=player.attackDuration;
+ player.attackHitIds=new Set();
+ // A swing only damages a target once; hit checks run during the active frames.
+}
+function attackHitbox(){
+ const progress=1-player.attackT/player.attackDuration;
+ if(progress<.22||progress>.78)return null;
+ const reach=player.attackRange;
+ return player.attackStyle==='crouch'?{x:player.face===1?player.x+player.w-1:player.x-reach+1,y:player.y+player.h-10,w:reach,h:8}:{x:player.face===1?player.x+player.w-1:player.x-reach+1,y:player.y+5,w:reach,h:player.h-8};
+}
+function applyWhipHits(){
+ const box=attackHitbox();if(!box)return;
+ enemies.forEach((e,i)=>{
+   if(!e.alive||player.attackHitIds.has('e'+i)||!overlaps(box,e))return;
+   player.attackHitIds.add('e'+i);let damage=currentAttack();if(e.kind==='bat')damage*=1.35;else if(e.kind==='mage')damage*=1.25;else if(e.kind==='knight')damage*=((e.state==='chase'&&Math.abs(player.x-e.x)<80)?0.45:1.2);e.hp-=damage;e.hitFlash=.12;
+   e.x+=player.face*9;
+   if(e.hp<=0){registerMinionDefeat(e)}
+ });
+ if(bossSpawned&&boss.alive&&!player.attackHitIds.has('boss')&&overlaps(box,boss)){
+   player.attackHitIds.add('boss');boss.hp-=Math.max(8,currentAttack()*.75);boss.flash=.13;boss.x+=player.face*5;
+   if(boss.hp<=0){registerBossDefeat()}
+ }
+}
+function castMagic(){if((!cheat.infiniteMp&&player.mp<10)||player.magicT>0)return;if(cheat.infiniteMp)player.mp=30;else player.mp-=10;player.magicT=.3;projectiles.push({x:player.x+(player.face===1?18:-8),y:player.y+10,vx:player.face*190,life:1.8});}
+function startDemo(){
+ // 先清除所有可能残留的按键，再重置关卡，确保从标题页、暂停页或游戏中都能启动。
+ Object.keys(keys).forEach(k=>keys[k]=false);
+ demoCheatBackup={infiniteHp:cheat.infiniteHp,infiniteMp:cheat.infiniteMp};
+ resetGame();demoMode=true;cheat.infiniteHp=true;cheat.infiniteMp=true;updateCheatUI();
+ hud.questStatus.textContent='通关演示中';
+}
+function driveDemo(dt){
+ if(!demoMode)return;
+ // 演示采用稳定的自动推进，不依赖玩家按键或碰撞寻路，避免卡在平台边缘导致演示停滞。
+ Object.keys(keys).forEach(k=>keys[k]=false);
+ player.hanging=false;player.hangPlatform=null;player.crouching=false;player.h=player.standH;
+ player.y=floorY-player.h;player.vy=0;player.onGround=true;
+ player.x=Math.min(worldWidth-player.w,player.x+105*dt);player.face=1;
+ const target=enemies.find(e=>e.alive&&e.x<=player.x+player.w+62);
+ if(target){target.hp-=Math.max(0,dt)*150;if(target.hp<=0)registerMinionDefeat(target);}
+ if(player.x>1110&&!bossSpawned){bossSpawned=true;hud.lootText.textContent=loot+' · 守门者出现！';}
+ if(bossSpawned&&boss.alive&&player.x>=boss.x-90){boss.hp-=Math.max(0,dt)*180;boss.flash=.06;if(boss.hp<=0)registerBossDefeat();}
+}
+function update(dt){
+ driveDemo(dt);
+ tick+=dt;if(cheat.infiniteHp)player.hp=100;if(cheat.infiniteMp)player.mp=30;player.anim+=dt;player.attackT=Math.max(0,player.attackT-dt);player.magicT=Math.max(0,player.magicT-dt);player.invuln=Math.max(0,player.invuln-dt);player.stateT=Math.max(0,player.stateT-dt);
+ if(player.dead){player.animState='dead';player.vx=0;return;}
+ // While hanging, gravity and horizontal movement are paused until the player climbs up (↑) or drops (↓).
+ if(player.hanging){
+  const p=player.hangPlatform;
+  if(!p){player.hanging=false;}
+  else {player.x=player.hangSide==='left'?p.x-player.w:p.x+p.w;player.y=p.y-8;player.vx=0;player.vy=0;player.onGround=false;player.animState='hang';
+   if(keys.up){player.hanging=false;player.hangPlatform=null;player.y=p.y-player.h;player.x=player.hangSide==='left'?p.x+3:p.x-player.w-3;player.vy=0;player.onGround=true;player.animState='idle';keys.up=false;}
+   else if(keys.down){player.hanging=false;player.hangPlatform=null;player.y=p.y+2;player.vy=35;keys.down=false;}
+   else {return;}
+  }
+ }
+ // Crouching is ground-only: keep the feet at the same height while reducing the collision box.
+ const wantsCrouch=keys.down&&player.onGround&&(player.attackT<=0||player.attackStyle==='crouch')&&player.stateT<=0;
+ if(wantsCrouch&&!player.crouching){player.y+=player.standH-player.crouchH;player.h=player.crouchH;player.crouching=true;}
+ else if(!wantsCrouch&&player.crouching){player.y-=player.standH-player.crouchH;player.h=player.standH;player.crouching=false;}
+ if(player.stateT<=0&&player.animState==='hurt')player.animState='idle';
+ if(player.attackT>0)applyWhipHits();
+ const baseSpeed=currentSpeed();const moveSpeed=keys.sprint?baseSpeed*1.6:baseSpeed;
+ const inputVx=(keys.left?-moveSpeed:0)+(keys.right?moveSpeed:0);
+ player.vx=inputVx+(player.knockback>0?player.knockbackVx:0);
+ if(player.animState!=='hurt'&&player.attackT<=0){if(player.crouching)player.animState='crouch';else if(!player.onGround)player.animState=player.vy<0?'jump':'fall';else if(Math.abs(inputVx)>0)player.animState='run';else player.animState='idle';}
+ if(player.knockback>0){player.knockback=Math.max(0,player.knockback-dt);player.knockbackVx*=Math.max(0,1-dt*5)}
+ if(inputVx)player.face=Math.sign(inputVx);
+ if(keys.up){const nearby=chests.find(c=>!inventory.openedChests.has(c.x)&&Math.abs((player.x+player.w/2)-(c.x+c.w/2))<27&&Math.abs((player.y+player.h)-floorY)<35);if(nearby){openChest(nearby);keys.up=false;player.vy=0}}
+ pickups.forEach((p,i)=>{if(overlaps(player,p)){collectPickup(p);p.collected=true}});for(let i=pickups.length-1;i>=0;i--)if(pickups[i].collected)pickups.splice(i,1);
+ if(keys.up&&player.onGround){if(player.crouching){player.y-=player.standH-player.crouchH;player.h=player.standH;player.crouching=false}player.vy=-245;player.onGround=false}
+ if(keys.attack)attack();if(player.attackT>0&&player.animState!=='hurt')player.animState='attack';if(keys.magic){castMagic();keys.magic=false}
+ const prevX=player.x,prevY=player.y,prevBottom=player.y+player.h;
+ player.vy+=620*dt;player.x+=player.vx*dt;player.y+=player.vy*dt;
+ player.x=Math.max(0,Math.min(worldWidth-player.w,player.x));player.onGround=false;
+ // Raised platforms are solid walls down to the floor: the player must jump high enough to clear their top.
+ // Resolve side collisions before landing checks so walking cannot phase through the visible block.
+ let wallContact=null;
+ for(const p of platforms){
+  if(p.y>=floorY)continue;
+  const verticalOverlap=player.y+player.h>p.y+3&&player.y<H;
+  if(!verticalOverlap)continue;
+  if(player.vx>0&&prevX+player.w<=p.x&&player.x+player.w>p.x&&player.x<p.x+p.w){player.x=p.x-player.w;wallContact={platform:p,side:'left'}}
+  else if(player.vx<0&&prevX>=p.x+p.w&&player.x<p.x+p.w&&player.x+player.w>p.x){player.x=p.x+p.w;wallContact={platform:p,side:'right'}}
+  if(wallContact)player.vx=0;
+ }
+ // Only use ledge-grab for platforms that exceed the player's normal jump height.
+ // Lower platforms remain fully physics-driven: keep the original jump arc and timing, with no snap-to-top shortcut.
+ const maxJumpRise=(245*245)/(2*620);
+ if(wallContact&&!player.onGround){const p=wallContact.platform;const tooHighToClear=(floorY-p.y)>maxJumpRise+1;const handReachTop=player.y<=p.y+10&&player.y+player.h>=p.y-12;if(tooHighToClear&&handReachTop){player.hanging=true;player.hangPlatform=p;player.hangSide=wallContact.side;player.x=wallContact.side==='left'?p.x-player.w:p.x+p.w;player.y=p.y-8;player.vx=0;player.vy=0;player.animState='hang';return}}
+ for(const p of platforms){if(player.x+player.w>p.x&&player.x<p.x+p.w&&player.vy>=0&&prevBottom<=p.y+12&&player.y+player.h>=p.y){player.y=p.y-player.h;player.vy=0;player.onGround=true}}
+ if(player.y>H+40)hurt(100);
+ enemies.forEach(e=>{
+  if(!e.alive)return;e.cd=Math.max(0,e.cd-dt);e.phase+=dt;
+  const dx=player.x-e.x,dist=Math.abs(dx),notice=e.kind==='mage'?235:e.kind==='bat'?175:150;
+  if(dist<notice){e.state='chase';e.alert=2.8}else if(e.alert>0){e.alert=Math.max(0,e.alert-dt);e.state=e.alert>0?'return':'patrol'}else if(Math.abs(e.x-e.homeX)>6)e.state='return';else e.state='patrol';
+  if(e.kind==='bat')e.y=174+Math.sin(e.phase*4)*8;
+  if(e.state==='chase'){
+   if(e.kind==='mage'){
+    if(dist>105)e.x+=Math.sign(dx)*38*dt;
+    if(dist<notice&&e.cd<=0){projectiles.push({x:e.x+(dx<0?-5:e.w),y:e.y+10,vx:(dx<0?-1:1)*105,life:2,hostile:true,attackType:'mage',source:'mage'});e.cd=1.8;e.state='attack'}
+   }else if(e.kind==='knight'){
+    if(dist>25)e.x+=Math.sign(dx)*48*dt;
+    if(dist<35&&e.cd<=0){hurt(17);e.cd=1.15;e.state='attack'}
+   }else if(e.kind==='bat'){
+    if(dist>14)e.x+=Math.sign(dx)*72*dt;
+    if(dist<25&&e.cd<=0){hurt(9);e.cd=.85;e.state='attack'}
+   }else{
+    if(dist>24)e.x+=Math.sign(dx)*55*dt;
+    if(dist<29&&e.cd<=0){hurt(11);e.cd=.9;e.state='attack'}
+   }
+  }else if(e.state==='return'){
+   const homeDx=e.homeX-e.x;if(Math.abs(homeDx)>4)e.x+=Math.sign(homeDx)*35*dt;else{e.x=e.homeX;e.state='patrol'}
+  }else if(e.state==='patrol'){
+   e.x+=e.vx*60*dt;if(Math.abs(e.x-e.homeX)>62)e.vx*=-1;
+  }
+  e.x=Math.max(0,Math.min(worldWidth-e.w,e.x));
+  if(overlaps(player,e)&&e.cd<=0&&e.kind!=='mage'){hurt(e.kind==='knight'?17:e.kind==='bat'?9:11);e.cd=e.kind==='knight'?1.15:.85}
+ });
+ if(player.x>1110&&!bossSpawned){bossSpawned=true;hud.lootText.textContent=loot+' · 守门者出现！'}
+ if(bossSpawned&&boss.alive){boss.cd=Math.max(0,boss.cd-dt);boss.flash=Math.max(0,boss.flash-dt);boss.x+=boss.vx*55*dt;if(boss.x<1190||boss.x>1380)boss.vx*=-1;if(Math.abs(player.x-boss.x)<100&&boss.cd<=0){hurt(15);boss.cd=1.0}if(Math.abs(player.x-boss.x)<300&&boss.cd<=0){const attackType=boss.attackSeq%2===0?'low':'high';boss.attackType=attackType;const attackY=attackType==='high'?178:198;projectiles.push({x:boss.x+(player.x<boss.x?-8:boss.w),y:attackY,vx:(player.x<boss.x?-1:1)*125,life:2,hostile:true,attackType});boss.attackSeq++;boss.cd=1.45}}
+ for(let i=projectiles.length-1;i>=0;i--){const p=projectiles[i];p.x+=p.vx*dt;p.life-=dt;if(!p.hostile){enemies.forEach(e=>{if(e.alive&&overlaps({x:p.x,y:p.y,w:8,h:8},e)){const dmg=(e.kind==='skeleton'?42:e.kind==='knight'?40:e.kind==='mage'?21:24)+equippedBonus('attack')*1.2;e.hp-=dmg;p.life=0;e.hitFlash=.12;if(e.hp<=0)registerMinionDefeat(e)}});if(bossSpawned&&boss.alive&&overlaps({x:p.x,y:p.y,w:8,h:8},boss)){boss.hp-=25;boss.flash=.1;p.life=0;if(boss.hp<=0){registerBossDefeat()}}}else if(overlaps({x:p.x,y:p.y,w:8,h:8},player)){hurt(12);p.life=0}if(p.life<=0||p.x<0||p.x>worldWidth)projectiles.splice(i,1)}
+ camera=Math.max(0,Math.min(worldWidth-W,player.x-W*.35));
+ hud.hpText.textContent=Math.ceil(player.hp)+'/100'+(cheat.infiniteHp?' ∞':'');hud.hpFill.style.width=player.hp+'%';hud.mpText.textContent=player.mp+'/30'+(cheat.infiniteMp?' ∞':'');hud.manaFill.style.width=(player.mp/30*100)+'%';hud.lootText.textContent=loot+' · '+(bossSpawned?(boss.alive?'守门者战斗中':'已击败'):'守门者未现身');updateQuest();
+}
+function render(){ctx.clearRect(0,0,W,H);drawWorld();if(player.invuln>0&&Math.floor(tick*12)%2===0)rect(player.x-camera,player.y,player.w,player.h,'#ffffff55')}
+function loop(now,token=loopGeneration){if(!running||token!==loopGeneration)return;const dt=Math.min(.035,(now-last)/1000||0);last=now;update(dt);render();if(running)requestAnimationFrame(t=>loop(t,token))}
+function pauseGame(){if(!running||won||gameOver)return;running=false;paused=true;Object.keys(keys).forEach(k=>keys[k]=false);document.querySelectorAll('[data-key]').forEach(btn=>btn.classList.remove('active'));pauseBtn.textContent='▶ 继续';overlay.classList.remove('hidden');overlay.querySelector('.dialog').innerHTML='<h1>游戏已暂停</h1><p>当前进度已保留。准备好后可以继续冒险，或重新开始本关。</p><button id="resumeBtn">继续游戏</button><button id="pauseRestartBtn">重新开始</button>';document.getElementById('resumeBtn').onclick=resumeGame;document.getElementById('pauseRestartBtn').onclick=resetGame}
+function resumeGame(){if(!paused)return;overlay.classList.add('hidden');paused=false;running=true;pauseBtn.textContent='Ⅱ 暂停';last=performance.now();loopGeneration++;requestAnimationFrame(now=>loop(now,loopGeneration))}
+pauseBtn.addEventListener('click',()=>{if(running)pauseGame();else if(paused)resumeGame()});
+document.getElementById('startBtn').onclick=resetGame;document.getElementById('startDemoBtn').onclick=startDemo;document.getElementById('demoBtn').addEventListener('click',()=>{startDemo()});
+document.querySelectorAll('[data-key]').forEach(btn=>{
+ const k=btn.dataset.key;
+ const down=e=>{e.preventDefault();keys[k]=true;btn.classList.add('active');if(k==='attack'){attack()}if(k==='magic'){castMagic();keys.magic=false}};
+ const up=e=>{e.preventDefault();if(k!=='attack'&&k!=='magic')keys[k]=false;else keys[k]=false;btn.classList.remove('active')};
+ btn.addEventListener('pointerdown',down);btn.addEventListener('pointerup',up);btn.addEventListener('pointercancel',up);btn.addEventListener('lostpointercapture',up);
+});
+const defaultKeyMap={left:'ArrowLeft',right:'ArrowRight',up:'ArrowUp',down:'ArrowDown',sprint:'l',attack:'j',magic:'k'};
+const actionNames={left:'左移',right:'右移',up:'跳跃',down:'下蹲',sprint:'奔跑',attack:'挥鞭攻击',magic:'灵击'};
+let keyMap={...defaultKeyMap}, waitingForKey=null;
+try{const saved=JSON.parse(localStorage.getItem('moonlitKeepKeyMap')||'null');if(saved&&typeof saved==='object')for(const k of Object.keys(defaultKeyMap)){if(typeof saved[k]==='string'&&saved[k])keyMap[k]=saved[k]}}catch(_e){}
+function keyLabel(key){return ({ArrowLeft:'← 方向左',ArrowRight:'→ 方向右',ArrowUp:'↑ 方向上',ArrowDown:'↓ 方向下',' ':'空格',Escape:'Esc',Enter:'Enter',Tab:'Tab',Backspace:'退格',Shift:'Shift'})[key]||key.toUpperCase()}
+function saveKeyMap(){try{localStorage.setItem('moonlitKeepKeyMap',JSON.stringify(keyMap))}catch(_e){}renderKeyRows();updateControlLabels()}
+function updateControlLabels(){document.querySelectorAll('[data-key]').forEach(btn=>{const k=btn.dataset.key;let small=btn.querySelector('small');if(small){small.textContent=`${actionNames[k]} · ${keyLabel(keyMap[k])}`}})}
+function renderKeyRows(){const rows=document.getElementById('keyRows');rows.innerHTML='';Object.keys(actionNames).forEach(action=>{const row=document.createElement('div');row.className='key-row';const name=document.createElement('span');name.textContent=actionNames[action];const btn=document.createElement('button');btn.type='button';btn.textContent=waitingForKey===action?'等待按键…':keyLabel(keyMap[action]);if(waitingForKey===action)btn.classList.add('waiting');btn.addEventListener('click',()=>{waitingForKey=action;renderKeyRows()});row.append(name,btn);rows.appendChild(row)})}
+function openSettings(){waitingForKey=null;renderKeyRows();document.getElementById('settingsPanel').classList.add('open')}
+function closeSettings(){waitingForKey=null;document.getElementById('settingsPanel').classList.remove('open')}
+document.getElementById('settingsBtn').addEventListener('click',openSettings);
+document.getElementById('closeSettingsBtn').addEventListener('click',closeSettings);
+document.getElementById('resetKeysBtn').addEventListener('click',()=>{keyMap={...defaultKeyMap};saveKeyMap();waitingForKey=null;renderKeyRows()});
+document.getElementById('settingsPanel').addEventListener('pointerdown',e=>{if(e.target.id==='settingsPanel')closeSettings()});
+function normalizeKey(e){if(e.key===' ')return ' ';if(e.key.length===1)return e.key.toLowerCase();return e.key}
+window.addEventListener('keydown',e=>{
+ if(waitingForKey){e.preventDefault();const action=waitingForKey;const newKey=normalizeKey(e);if(['Control','Alt','Shift','Meta'].includes(newKey))return;const conflict=Object.keys(keyMap).find(k=>k!==action&&keyMap[k]===newKey);if(conflict){alert(`该按键已分配给“${actionNames[conflict]}”，请换一个按键。`);return}keyMap[action]=newKey;waitingForKey=null;saveKeyMap();return}
+ if(document.getElementById('settingsPanel').classList.contains('open')){if(e.key==='Escape')closeSettings();return}
+ if(document.getElementById('cheatPanel').style.display==='flex'){if(e.key==='Escape')closeCheats();return}
+ if(e.key==='Escape'){if(running)pauseGame();else if(paused)resumeGame();return}
+ const action=Object.keys(keyMap).find(k=>keyMap[k]===normalizeKey(e));if(action){e.preventDefault();keys[action]=true;if(action==='attack')attack();if(action==='magic'){castMagic();keys.magic=false}}
+});
+window.addEventListener('keyup',e=>{const action=Object.keys(keyMap).find(k=>keyMap[k]===normalizeKey(e));if(action)keys[action]=false});
+window.addEventListener('blur',()=>Object.keys(keys).forEach(k=>keys[k]=false));
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('installBtn').style.display='block'});
+document.getElementById('installBtn').addEventListener('click',async()=>{if(deferredPrompt){deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null}else alert('如果浏览器没有显示安装提示，请使用浏览器菜单中的“添加到主屏幕”。')});
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+updateControlLabels();render();
+})();
+</script>
+</body>
+</html>

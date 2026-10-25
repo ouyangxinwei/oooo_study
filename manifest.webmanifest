@@ -1,0 +1,12 @@
+{
+  "name": "Moonlit Keep · 月影古堡",
+  "short_name": "月影古堡",
+  "description": "原创像素风横版动作探索游戏",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#101326",
+  "theme_color": "#101326",
+  "icons": [{ "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
