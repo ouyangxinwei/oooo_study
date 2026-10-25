@@ -15,7 +15,7 @@ const checks = [
  ['保存关卡进度和计时', /world:\{currentStage,stageElapsed:Math\.max\(0,\(performance\.now\(\)-stageStartedAt\)\/1000\),stageTransitioning/.test(html)],
  ['恢复转场状态', /if\(stageTransitioning&&!won&&!gameOver&&currentStage<8\)\{showStageTransition\(\)/.test(html)],
  ['存档版本 V27', /moonlitKeepSaveV27/.test(html)&&/SAVE_VERSION=27/.test(html)],
- ['Service Worker 缓存 V27', /moonlit-keep-v27/.test(sw)],
+ ['Service Worker 缓存 V30', /moonlit-keep-v30/.test(sw)],
  ['文档记录 V27', /v0\.27|V27：八关 Boss 战役/.test(docs)]
 ];
 let failed=0;
