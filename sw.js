@@ -1,5 +1,5 @@
-const CACHE_NAME = 'moonlit-keep-v27';
-const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.svg', './assets/moonlit-gothic-background.png'];
+const CACHE_NAME = 'moonlit-keep-v30';
+const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)));
   self.skipWaiting();

@@ -125,10 +125,6 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated;touch-acti
 <script>
 (() => {
 const canvas = document.getElementById('game'), ctx = canvas.getContext('2d');
-const gothicBackground = new Image();
-gothicBackground.src = './assets/moonlit-gothic-background.png';
-gothicBackground.decoding = 'async';
-gothicBackground.onload = () => { if (typeof render === 'function') render(); };
 ctx.imageSmoothingEnabled = false;
 const W=480,H=270, keys={left:false,right:false,up:false,down:false,sprint:false,attack:false,magic:false};
 const hud={hpText:document.getElementById('hpText'),hpFill:document.getElementById('hpFill'),mpText:document.getElementById('mpText'),manaFill:document.getElementById('manaFill'),lootText:document.getElementById('lootText'),questFill:document.getElementById('questFill'),questPercent:document.getElementById('questPercent'),minionTask:document.getElementById('minionTask'),bossTask:document.getElementById('bossTask'),questStatus:document.getElementById('questStatus')};
@@ -350,29 +346,12 @@ function drawProceduralBackground(){
  castleAreas.slice(1).forEach(a=>{const x=a.start-camera;if(x>-42&&x<W+42){rect(x-5,105,10,121,'#514762');rect(x-2,117,4,109,'#17182e');rect(x-13,102,26,7,a.accent);rect(x-8,94,16,8,a.arch)}});
 }
 function drawBackground(){
- const area=getCastleArea();
- if(!gothicBackground.complete || !gothicBackground.naturalWidth){drawProceduralBackground();const fallbackTint=['rgba(5,18,52,.18)','rgba(9,36,29,.30)','rgba(43,12,54,.28)','rgba(64,19,28,.28)','rgba(4,46,66,.32)','rgba(12,50,24,.30)','rgba(43,14,68,.33)','rgba(68,10,35,.36)'][currentStage-1];rect(0,0,W,H,fallbackTint);text(stageProfile().title,W-142,15,stageProfile().accent,7);drawStageMotif();return;}
- // Pan across the panorama very slowly as the player explores the world.
- // The source art is a 2:1 panorama; draw it wider than the viewport and crop
- // the sides to create a subtle parallax-like sense of movement.
- const bgW=540,bgH=270;
- const maxPan=Math.max(0,bgW-W);
- const worldMax=Math.max(1,worldWidth-W);
- const pan=Math.max(0,Math.min(maxPan,(camera/worldMax)*maxPan));
- ctx.save();
- ctx.imageSmoothingEnabled=false;
- ctx.drawImage(gothicBackground,-Math.round(pan),0,bgW,bgH);
- // Gently tint each castle zone while keeping the new artwork visible.
- const stageTint=['rgba(5,18,52,.22)','rgba(9,36,29,.32)','rgba(43,12,54,.30)','rgba(64,19,28,.30)','rgba(4,46,66,.34)','rgba(12,50,24,.32)','rgba(43,14,68,.35)','rgba(68,10,35,.38)'][currentStage-1]||'rgba(5,12,32,.10)';
- const tint=stageTint;rect(0,0,W,H,tint);
- // Stage-specific ambient wash and distant silhouettes make each chapter read as a new biome.
- const sp=stageProfile();rect(0,0,W,3,sp.accent);for(let i=0;i<5;i++){const sx=((i*117-camera*(.12+i*.025))% (W+90)+(W+90))%(W+90)-35;rect(sx,70+(i%3)*12,18,125,sp.sky);rect(sx+4,57+(i%3)*12,10,18,sp.body);rect(sx+7,91+(i%2)*10,3,30,sp.accent);}
- drawStageMotif();text(sp.title, W-142, 15, sp.accent, 7);
- // A restrained lower vignette improves contrast for the hero and platforms.
- const grad=ctx.createLinearGradient(0,115,0,H);
- grad.addColorStop(0,'rgba(3,7,22,0)');grad.addColorStop(1,'rgba(2,5,17,.60)');
- ctx.fillStyle=grad;ctx.fillRect(0,115,W,H-115);
- ctx.restore();
+ drawProceduralBackground();
+ const tint=['rgba(5,18,52,.18)','rgba(9,36,29,.30)','rgba(43,12,54,.28)','rgba(64,19,28,.28)','rgba(4,46,66,.32)','rgba(12,50,24,.30)','rgba(43,14,68,.33)','rgba(68,10,35,.36)'][currentStage-1]||'rgba(5,12,32,.10)';
+ rect(0,0,W,H,tint);
+ const sp=stageProfile();
+ text(sp.title,W-142,15,sp.accent,7);
+ drawStageMotif();
 }
 function drawStageMotif(){
  const a=stageProfile().accent;
@@ -390,70 +369,41 @@ function drawPlatform(p){
  rect(x,p.y,p.w,H-p.y,'#33324b');rect(x,p.y,p.w,4,'#b7a36e');
  for(let xx=0;xx<p.w;xx+=16){rect(x+xx,p.y+8,1,Math.max(0,H-p.y-8),'#45425d');rect(x+xx+5,p.y+17,7,1,'#242a43')}
 }
+const pixelPalettes={
+ hero:{H:'#3a2438',S:'#e8c6a1',E:'#20233b',C:'#d8dbe4',M:'#35547b',R:'#8f2949',r:'#c34c68',L:'#aeb9d1',B:'#80604f',G:'#f6ce76'},
+ bat:{P:'#574c86',p:'#8270bb',E:'#ff687a',W:'#7665ad',w:'#d6c8f1'},
+ skeleton:{B:'#dad6c7',b:'#a8a391',E:'#25263b',T:'#786b65',A:'#737c92',W:'#b9b4a2'},
+ mage:{H:'#453b78',h:'#7664b9',R:'#574b91',E:'#8bd9ff',S:'#c5b5eb',B:'#302c58'},
+ knight:{S:'#b8c3d5',s:'#77839f',E:'#ffcf77',A:'#5e6b87',a:'#d0d8e7',B:'#707b95',W:'#b9c5d8'}
+};
+const pixelSprites={
+ hero:['..HHHH..','.HHHHHH.','.HSSSS..','.HSSESS..','..SSSS..','...S....','..CCCCC.','R.CCCM..','RRCCMM..','.CCMMMC.','.LL.LL..','.LL.LL..','LL...LL.','BB...BB.'],
+ bat:['....PP....','..PPPPPP..','.PPpPPpPP.','PPpPPPPpPP','PpPPPEPPpP','..PPPPPP..','...PppP...','..W....W..','.WW....WW.','WW......WW','..w....w..','...w..w...'],
+ skeleton:['....BBBB....','...BBBBBB...','...BBEEBB...','...BBBBBB...','....BbbB....','.....BB......','...AABBAA....','..AAABBAAA...','..AABBBBBA...','...AABBBA....','...BB..BB....','...BB..BB....','...BB..BB....','..BBB..BBB...'],
+ mage:['....HHHH....','...HHHHHH...','..HHHHHHHH..','...HE..EH....','....EEEE....','.....EE......','...RRRRRR....','..RRRRRRRR...','..RRRERRRR...','...RRRRRR....','...BB..BB....','...BB..BB....','...BB..BB....','..BBB..BBB...'],
+ knight:['...SSSSSS....','..SSSSSSSS...','..ssEEEEss...','...SSSSSS....','...AAAAAA....','..AAAAAAAA...','..AAaAAaAA...','..AAAAAAAA...','..AAAAWAAA...','...AAAAAA....','..SS....SS...','..SS....SS...','..SS....SS...','..BBB..BBB...']
+};
+function drawPixelSprite(rows,x,y,palette,scale=2,flip=false){ctx.save();const width=Math.max(...rows.map(row=>row.length));rows=rows.map(row=>row.padEnd(width,'.'));if(flip){ctx.translate(x+width*scale,y);ctx.scale(-1,1);x=0;y=0}for(let row=0;row<rows.length;row++){for(let col=0;col<rows[row].length;col++){const color=palette[rows[row][col]];if(color)rect(x+col*scale,y+row*scale,scale,scale,color)}}ctx.restore()}
 function drawHero(){
- const x=player.x-camera, y=player.y;
- const state=player.animState;
- const phase=player.anim*12;
- const runPhase=Math.sin(phase*1.35);
- const idleBreath=Math.sin(phase*.45)*.7;
- const isRun=state==='run', isJump=state==='jump', isFall=state==='fall';
- const isAttack=state==='attack', isHurt=state==='hurt', isDead=state==='dead', isCrouch=state==='crouch'||(state==='attack'&&player.attackStyle==='crouch'), isHang=state==='hang';
- const bob=isCrouch?0:isRun?Math.abs(runPhase)*1.5:isJump?-1.5:isFall?1.5:idleBreath;
- const legSwing=isRun?runPhase*3.4:0;
- const hurtFlash=isHurt || (player.invuln>0 && Math.floor(tick*18)%2===0);
- if(hurtFlash)ctx.globalAlpha=.55;
- if(isDead){
-   // Death pose: fallen body, dropped head silhouette and fading cape.
-   ctx.save();ctx.translate(x+8,y+player.h-5);ctx.rotate(player.face===1?.9:-.9);
-   rect(-8,-13,15,8,'#c6c9d8');rect(-10,-12,5,7,'#8f2949');rect(4,-16,7,7,'#e8c6a1');rect(4,-18,8,3,'#4b2d3d');rect(-7,-5,6,3,'#8a6b58');rect(4,-6,7,3,'#8a6b58');ctx.restore();ctx.globalAlpha=1;return;
- }
- // Ledge-grab pose: arms visibly reach for the platform edge.
- if(isHang){rect(x+3,y+8,10,12,'#8f2949');rect(x+4,y+8,10,10,'#c6c9d8');rect(x+6,y+10,7,6,'#2d4d72');rect(x+4,y+1,10,8,'#e8c6a1');rect(x+3,y,11,4,'#4b2d3d');rect(x+(player.hangSide==='left'?12:-2),y+2,5,3,'#e8c6a1');rect(x+2,y+18,5,4,'#b7bfd9');rect(x+10,y+18,5,4,'#b7bfd9');rect(x+1,y+22,5,3,'#8a6b58');rect(x+10,y+22,5,3,'#8a6b58');ctx.globalAlpha=1;return}
- // Crouch pose lowers the head and folds the cape to make the low profile readable.
- if(isCrouch){rect(x+3,y+player.h-5,10,4,'#8f2949');rect(x+5,y+player.h-3,6,3,'#c34c68');rect(x+2,y+player.h-10,12,6,'#c6c9d8');rect(x+7,y+player.h-14,8,7,'#e8c6a1');rect(x+8,y+player.h-15,8,3,'#4b2d3d');rect(x+1,y+player.h-5,5,3,'#8a6b58');rect(x+11,y+player.h-5,5,3,'#8a6b58');if(player.attackT>0&&player.attackStyle==='crouch'){const progress=1-player.attackT/player.attackDuration;const sx=x+(player.face===1?13:3),sy=y+player.h-9,reach=player.attackRange;let ex=sx+player.face*(progress<.28?9:progress<.68?reach:reach*.65),ey=sy+(progress<.28?-2:progress<.68?-1:4);ctx.strokeStyle='#f6ce76';ctx.lineWidth=2.5;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(sx,sy);ctx.quadraticCurveTo(sx+player.face*reach*.52,sy-3,ex,ey);ctx.stroke();rect(ex-1,ey-1,4,3,'#fff0b0')}ctx.globalAlpha=1;return}
- // Cape reacts to movement and hurt/attack poses.
- const capeShift=isAttack?player.face*2:isHurt?-2:Math.sin(phase*.7)*1.5;
- rect(x+3+capeShift,y+9+bob,player.face===1?7:6,13,'#8f2949');
- rect(x+(player.face===1?2:10)+capeShift,y+12+bob,3,6,'#c34c68');
- // Legs use separate poses for running, jumping, falling, and recoil.
- if(isJump){rect(x+3,y+18+bob,5,5,'#b7bfd9');rect(x+10,y+17+bob,4,6,'#b7bfd9');rect(x+1,y+22+bob,5,3,'#8a6b58');rect(x+10,y+22+bob,5,3,'#8a6b58')}
- else if(isFall){rect(x+3,y+18+bob,5,6,'#b7bfd9');rect(x+10,y+19+bob,4,6,'#b7bfd9');rect(x+1,y+23+bob,5,3,'#8a6b58');rect(x+10,y+24+bob,5,3,'#8a6b58')}
- else if(isHurt){rect(x+2,y+18,5,6,'#b7bfd9');rect(x+10,y+17,5,6,'#b7bfd9');rect(x,y+23,5,3,'#8a6b58');rect(x+11,y+23,5,3,'#8a6b58')}
- else {rect(x+4+legSwing,y+17+bob,4,7,'#b7bfd9');rect(x+10-legSwing,y+17+bob,4,7,'#b7bfd9');rect(x+2+legSwing,y+24+bob,5,4,'#8a6b58');rect(x+10-legSwing,y+24+bob,5,4,'#8a6b58')}
- // Torso lean communicates action state.
- const lean=isAttack?player.face*1.5:isHurt?-player.face*2:isJump?player.face*.5:0;
- rect(x+3+lean,y+8+bob,11,11,'#c6c9d8');rect(x+5+lean,y+10+bob,7,7,'#2d4d72');
- rect(x+2+lean,y+9+bob,3,7,'#e2d7c6');
- // Head and hair; hurt pose lowers the head slightly.
- const headDrop=isHurt?2:0;
- rect(x+4+lean,y+1+bob+headDrop,10,8,'#e8c6a1');rect(x+3+lean,y+bob+headDrop,11,4,'#4b2d3d');rect(x+11+lean,y+4+bob+headDrop,3,2,'#191d31');
- // Attack wind-up, active swing, and recovery are distinct visual phases.
- if(player.attackT>0){
-   const progress=1-player.attackT/player.attackDuration;const reach=player.attackRange;
-   const sx=x+(player.face===1?13:3),sy=y+12+bob;
-   let ex,ey,mx,my;
-   if(progress<.28){ex=sx+player.face*9;ey=sy-8;mx=sx+player.face*4;my=sy-7}
-   else if(progress<.68){ex=sx+player.face*reach;ey=sy+Math.sin((progress-.28)/.4*Math.PI)*-9;mx=sx+player.face*reach*.53;my=sy-8}
-   else {ex=sx+player.face*(reach*.65);ey=sy+5;mx=sx+player.face*reach*.42;my=sy+2}
-   ctx.strokeStyle='#f6ce76';ctx.lineWidth=2.5;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(sx,sy);ctx.quadraticCurveTo(mx,my,ex,ey);ctx.stroke();rect(ex-1,ey-1,4,3,'#fff0b0');
-   if(progress>.25&&progress<.72){ctx.strokeStyle='#fff0b077';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(sx,sy-3);ctx.lineTo(ex-player.face*6,ey-5);ctx.stroke()}
- }
- if(player.magicT>0){rect(x-4,y-4,24,36,'#7b9cff33');rect(x+5,y+3,6,2,'#b7d7ff')}
+ const x=player.x-camera,y=player.y,state=player.animState,phase=player.anim*12;
+ const crouch=state==='crouch'||(state==='attack'&&player.attackStyle==='crouch');
+ const hurt=state==='hurt'||(player.invuln>0&&Math.floor(tick*18)%2===0);
+ if(hurt)ctx.globalAlpha=.58;
+ if(state==='dead'){ctx.save();ctx.translate(x+8,y+player.h-4);ctx.rotate(player.face===1?.9:-.9);drawPixelSprite(pixelSprites.hero,-8,-24,pixelPalettes.hero,2);ctx.restore();ctx.globalAlpha=1;return}
+ const bob=state==='run'?Math.abs(Math.sin(phase*1.35))*1.2:state==='jump'?-1:state==='fall'?1:state==='idle'?Math.sin(phase*.45)*.5:0;
+ if(crouch)drawPixelSprite(['........','........','........','........','........','........','........','RRCCMM..','.CCMMMC.','.LL.LL..','LL...LL.','BB...BB.'],x,y+player.h-24,pixelPalettes.hero,2,player.face<0);
+ else drawPixelSprite(pixelSprites.hero,x,y+bob,pixelPalettes.hero,2,player.face<0);
+ if(state==='hang'){rect(x+(player.hangSide==='left'?12:0),y+2,4,3,'#e8c6a1')}
+ if(player.attackT>0){const progress=1-player.attackT/player.attackDuration,reach=player.attackRange,sx=x+(player.face===1?13:3),sy=y+12+bob;let ex=sx+player.face*(progress<.28?9:progress<.68?reach:reach*.65),ey=sy+(progress<.28?-7:progress<.68?-2:5);ctx.strokeStyle='#f6ce76';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(sx,sy);ctx.quadraticCurveTo(sx+player.face*reach*.5,sy-5,ex,ey);ctx.stroke();rect(ex-1,ey-1,3,3,'#fff0b0')}
+ if(player.magicT>0){rect(x-4,y-3,24,34,'#7b9cff33');rect(x+5,y+3,6,2,'#b7d7ff')}
  ctx.globalAlpha=1;
 }
 function drawEnemy(e){
  const x=e.x-camera,y=e.y;if(x<-40||x>W+40)return;
  if(e.hitFlash>0){ctx.globalAlpha=.55;e.hitFlash=Math.max(0,e.hitFlash-.025)}
- if(e.kind==='bat'){
-  rect(x+4,y+6,14,9,'#554b83');rect(x+7,y+3,8,8,'#8c7ac4');rect(x+9,y+6,2,2,'#ff687a');rect(x+13,y+6,2,2,'#ff687a');
-  const wing=Math.sin(tick*18+e.phase)>0?3:0;rect(x+wing,y+5,5,7,'#7264a8');rect(x+16-wing,y+5,5,7,'#7264a8');rect(x+8,y+14,2,4,'#d7c9f5');rect(x+14,y+14,2,4,'#d7c9f5');
- }else if(e.kind==='skeleton'){
-  rect(x+4,y+3,12,9,'#d9d5c5');rect(x+5,y+6,3,3,'#24253c');rect(x+12,y+6,3,3,'#24253c');rect(x+7,y+10,7,2,'#786b65');rect(x+3,y+13,14,10,'#737c92');rect(x+4,y+23,4,5,'#d9d5c5');rect(x+13,y+23,4,5,'#d9d5c5');rect(x+18,y+12,2,13,'#b9b4a2');rect(x+17,y+10,4,4,'#e5dfcc');
- }else if(e.kind==='mage'){
-  rect(x+3,y+2,15,9,'#453b78');rect(x+1,y+8,19,4,'#6d5db0');rect(x+4,y+11,13,13,'#544a91');rect(x+7,y+6,3,3,'#8bd9ff');rect(x+13,y+6,3,3,'#8bd9ff');rect(x+6,y+24,4,4,'#302c58');rect(x+13,y+24,4,4,'#302c58');rect(x+19,y+13,3,9,'#b7a5e9');rect(x+18,y+10,5,5,'#8bd9ff');
- }else if(e.kind==='knight'){
-  rect(x+4,y+2,16,9,'#b8c3d5');rect(x+3,y+5,18,5,'#727e9b');rect(x+7,y+6,10,3,'#ffcf77');rect(x+2,y+11,20,12,'#5e6b87');rect(x+4,y+13,16,7,'#a8b5cb');rect(x+1,y+12,5,12,'#c0cada');rect(x+18,y+12,5,12,'#c0cada');rect(x+4,y+23,6,5,'#77829b');rect(x+15,y+23,6,5,'#77829b');rect(x+21,y+13,3,13,'#b9c5d8');
- }
+ const rows=pixelSprites[e.kind];if(rows)drawPixelSprite(rows,x+(e.kind==='bat'?-1:0),y,pixelPalettes[e.kind],2,e.vx<0);
+ if(e.kind==='bat'){const flap=Math.sin(tick*18+e.phase)>0?2:0;rect(x-flap,y+8,4,6,'#7665ad');rect(x+e.w+flap-4,y+8,4,6,'#7665ad')}
+ if(e.kind==='knight')rect(x+20,y+11,3,14,'#b9c5d8');
  rect(x,y-5,e.w,3,'#383b51');rect(x,y-5,e.w*Math.max(0,e.hp/e.max),3,'#ff687a');
  if(e.state==='chase')text('!',x+e.w/2-2,y-10,'#ffce79',7);
  ctx.globalAlpha=1;
@@ -557,15 +507,32 @@ function startDemo(){
 }
 function driveDemo(dt){
  if(!demoMode)return;
- // 演示采用稳定的自动推进，不依赖玩家按键或碰撞寻路，避免卡在平台边缘导致演示停滞。
  Object.keys(keys).forEach(k=>keys[k]=false);
- player.hanging=false;player.hangPlatform=null;player.crouching=false;player.h=player.standH;
- player.y=floorY-player.h;player.vy=0;player.onGround=true;
- player.x=Math.min(worldWidth-player.w,player.x+105*dt);player.face=1;
+ player.face=1;
+ // Keep the walkthrough on the normal movement and collision path. Jump before a raised platform blocks the route.
+ if(player.hanging){keys.up=true;return}
+ keys.right=true;keys.sprint=true;
+ const obstacle=platforms.filter(p=>p.y<floorY&&p.x+p.w>player.x+player.w&&p.x<player.x+player.w+58).sort((a,b)=>a.x-b.x)[0];
+ if(player.onGround&&obstacle&&obstacle.x>=player.x+player.w-12)keys.up=true;
+ // Read incoming hostile trajectories and choose the matching dodge while grounded.
+ const incoming=projectiles.find(p=>{if(!p.hostile||!p.vx)return false;const eta=(player.x+player.w/2-p.x)/p.vx;return eta>0&&eta<.55});
+ if(incoming&&player.onGround){if(incoming.y>=player.y+7)keys.down=true;else if(incoming.y>=player.y-22)keys.up=true}
+ if(bossSpawned&&boss.alive){
+  if(boss.dashTimer>0&&Math.abs(player.x-boss.x)<105&&player.onGround)keys.up=true;
+  if(boss.aoeTimer>0&&boss.aoeTimer<.55&&Math.abs(player.x-boss.x)<155&&player.onGround)keys.up=true;
+ }
  const target=enemies.find(e=>e.alive&&e.x<=player.x+player.w+62);
- if(target){target.hp-=Math.max(0,dt)*150;if(target.hp<=0)registerMinionDefeat(target);}
- if(player.x>1110&&!bossSpawned){bossSpawned=true;hud.lootText.textContent=loot+' · '+stageProfile().name+'出现！';updateBossHud();}
- if(bossSpawned&&boss.alive&&player.x>=boss.x-90){boss.hp-=Math.max(0,dt)*180;boss.flash=.06;if(boss.hp<=0)registerBossDefeat();}
+ if(target){
+  const distance=Math.abs((target.x+target.w/2)-(player.x+player.w/2));
+  if(distance<68){keys.right=false;keys.attack=true;if(target.kind==='mage'||target.kind==='knight'||target.kind==='bat')keys.magic=true}
+  // Demo assistance keeps the encounter moving, while the visible whip and magic follow real combat timing.
+  if(distance<68){target.hp-=dt*(target.kind==='bat'?135:target.kind==='knight'?95:115);target.hitFlash=.05;if(target.hp<=0)registerMinionDefeat(target)}
+ }
+ if(player.x>1110&&!bossSpawned){bossSpawned=true;hud.lootText.textContent=loot+' · '+stageProfile().name+'出现！';updateBossHud()}
+ if(bossSpawned&&boss.alive){
+  const distance=Math.abs((player.x+player.w/2)-(boss.x+boss.w/2));
+  if(distance<128){keys.right=false;keys.attack=true;keys.magic=true;boss.hp-=dt*155;boss.flash=.06;if(boss.hp<=0)registerBossDefeat()}
+ }
 }
 function update(dt){
  driveDemo(dt);
