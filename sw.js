@@ -1,11 +1,12 @@
-const CACHE_NAME = 'moonlit-keep-v30';
-const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
+const CACHE_PREFIX = 'moonlit-keep-';
+const CACHE_NAME = 'moonlit-keep-v42';
+const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.svg', './stage-maps.js', './save-store.js', './audio.js', './renderer.js', './collision.js', './physics.js', './combat.js', './enemy-ai.js'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)));
   self.skipWaiting();
 });
 self.addEventListener('activate', event => {
-  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))));
+  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME).map(key => caches.delete(key)))));
   self.clients.claim();
 });
 self.addEventListener('fetch', event => {

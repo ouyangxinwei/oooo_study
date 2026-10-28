@@ -1,0 +1,11 @@
+const fs=require('fs'),path=require('path'),assert=require('assert');
+const root=path.resolve(__dirname,'..'),html=fs.readFileSync(path.join(root,'index.html'),'utf8'),sw=fs.readFileSync(path.join(root,'sw.js'),'utf8'),readme=fs.readFileSync(path.join(root,'README.md'),'utf8'),changelog=fs.readFileSync(path.join(root,'CHANGELOG.md'),'utf8'),store=fs.readFileSync(path.join(root,'save-store.js'),'utf8'),manual=fs.readFileSync(path.join(root,'docs','技术手册.md'),'utf8');
+assert.ok(html.includes("SAVE_KEY='moonlitKeepSaveV37'")&&html.includes('SAVE_VERSION=37'));
+assert.ok(html.includes('MoonlitSaveStore.create')&&store.includes('legacyKeys')&&store.includes('!validate(data)'));
+assert.ok(store.indexOf('!validate(data)')<store.indexOf('storage.setItem(key, JSON.stringify(upgraded))'));
+assert.ok(store.indexOf('storage.setItem(key, JSON.stringify(upgraded))')<store.indexOf('storage.removeItem(sourceKey)'));
+assert.ok(html.includes('moonlitKeepSaveV27')&&manual.includes('moonlitKeepSaveV37'));
+assert.ok(readme.includes('当前版本 V42')&&readme.includes('版本化本地存档'));
+assert.ok(changelog.includes('v0.38 — 文档一致性修复与存档版本号对齐'));
+assert.ok(sw.includes('moonlit-keep-v42'));
+console.log('PASS V38 save documentation and compatibility carried into V39 save-store module');

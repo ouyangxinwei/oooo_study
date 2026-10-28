@@ -79,22 +79,22 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated;touch-acti
 <body>
 <div id="app">
 <header>
- <div><div class="brand">MOONLIT KEEP <span style="color:#f5f1dc">/ 月影古堡</span></div><div class="subtitle">原创像素动作冒险 · V27 · 八章 Boss 战</div></div>
- <div id="headerActions"><button id="saveStatusBtn" type="button" title="查看存档状态">💾 存档：未保存</button><button id="pauseBtn" type="button" disabled>Ⅱ 暂停</button><button id="demoBtn" type="button">▶ 通关演示</button><button id="inventoryBtn" type="button">📋 查看物品清单</button><button id="musicBtn" type="button" aria-pressed="false">♫ 音乐：关闭</button><button id="settingsBtn" type="button">按键设置</button><button id="cheatBtn" type="button">作弊</button><button id="installBtn">安装到桌面</button></div>
+ <div><div class="brand">MOONLIT KEEP <span style="color:#f5f1dc">/ 月影古堡</span></div><div class="subtitle">原创像素动作冒险 · V40 · 八章 Boss 战</div></div>
+ <div id="headerActions"><button id="saveStatusBtn" type="button" title="查看存档状态">💾 存档：未保存</button><button id="pauseBtn" type="button" disabled>Ⅱ 暂停</button><button id="demoBtn" type="button" title="演示使用自动操作和无限 HP/MP">▶ 通关演示</button><button id="inventoryBtn" type="button">📋 查看物品清单</button><button id="musicBtn" type="button" aria-pressed="false">♫ 音乐：关闭</button><button id="settingsBtn" type="button">按键设置</button><button id="cheatBtn" type="button">作弊</button><button id="installBtn">安装到桌面</button></div>
 </header>
 <section id="hud">
  <div class="stat"><b>生命 VIT <span id="hpText">100/100</span></b><div class="bar"><div class="fill" id="hpFill"></div></div></div>
  <div class="stat"><b>灵力 AETHER <span id="mpText">30/30</span></b><div class="bar"><div class="fill" id="manaFill"></div></div></div>
  <div class="stat"><b>战利品 / BOSS</b><span id="lootText">0 · 守门者未现身</span></div>
 </section>
-<section id="questPanel" aria-label="当前关卡任务"><div class="quest-title">第 <span id="stageNumber">1</span> / 8 关 · <span id="questStatus">进行中</span></div><div class="quest-progress"><div class="bar"><div class="fill" id="questFill"></div></div><span id="questPercent">0%</span></div><div class="quest-list"><span class="quest-item" id="minionTask">□ 清除小兵 0/4（60%）</span><span class="quest-item" id="bossTask">□ 击败守门者（最终目标 40%）</span></div></section>
+<section id="questPanel" aria-label="当前关卡任务"><div class="quest-title">第 <span id="stageNumber">1</span> / 8 关 · <span id="questStatus">进行中</span></div><div class="quest-progress"><div class="bar"><div class="fill" id="questFill"></div></div><span id="questPercent">0%</span></div><div class="quest-list"><span class="quest-item" id="minionTask">□ 清除小兵 0/4（50%）</span><span class="quest-item" id="bossTask">□ 击败守门者（40%）</span><span class="quest-item" id="exploreTask">□ 探索目标（10%）</span></div></section>
 <section id="bossHud" aria-label="Boss 生命值" style="display:none;background:#24182d;border:1px solid #8b4965;border-radius:8px;padding:7px 10px;gap:5px">
  <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px"><strong id="bossName" style="color:#ff9aaa">☠ 苍铠守门者</strong><span id="bossPhaseText" style="color:#ffcf77">阶段 I · 试探</span><span id="bossHpText">240 / 240</span></div>
  <div class="bar" style="height:9px;background:#4a2a40"><div id="bossHpFill" class="fill" style="width:100%;background:linear-gradient(90deg,#ff456e,#ff9a85)"></div></div>
 </section>
 <div id="stage">
  <canvas id="game" width="480" height="270" aria-label="月影古堡游戏画面"></canvas>
- <div id="overlay"><div class="dialog"><h1>月影古堡</h1><p>挑战八个连续关卡，每关都有独特场景、专属 Boss 外形与攻击方式。击败 Boss 后进入通关转场，再前往下一关；第 8 关将迎来最终决战。</p><p>操作：← → 移动 · ↑ 跳跃 · ↓ 下蹲躲避低位蓝色灵弹；跳跃躲避高位橙色灵弹 · L 奔跑（按住方向键同时按住）· J 挥鞭 · K 灵击。蝙蝠怕挥鞭、骷髅兵怕灵击、法师会远程施法、重甲骑士正面护甲坚硬，灵击或绕后更有效。靠近宝箱按 ↑ 开启，收集金币、药水与装备；在背包中装备武器、防具和饰品，再挑战守门者。</p><button id="continueBtn" type="button" style="display:none">继续冒险</button><button id="startBtn">新游戏</button><button id="startDemoBtn">观看通关演示</button><p id="saveMenuNote" style="font-size:11px;color:#aeb7d9;margin-bottom:0">进度会自动保存在此浏览器中。</p></div></div>
+ <div id="overlay"><div class="dialog"><h1>月影古堡</h1><p>挑战八个连续关卡，每关都有独特场景、专属 Boss 外形与攻击方式。击败 Boss 后进入通关转场，再前往下一关；第 8 关将迎来最终决战。</p><p>操作：← → 移动 · ↑ 跳跃 · ↓ 下蹲躲避低位蓝色灵弹；跳跃躲避高位橙色灵弹 · L 奔跑（按住方向键同时按住）· J 挥鞭 · K 灵击。蝙蝠怕挥鞭、骷髅兵怕灵击、法师会远程施法、重甲骑士正面护甲坚硬，灵击或绕后更有效。靠近宝箱按 E 交互，收集金币、药水与装备；在背包中装备武器、防具和饰品，再挑战守门者。</p><button id="continueBtn" type="button" style="display:none">继续冒险</button><button id="startBtn">新游戏</button><button id="startDemoBtn">观看通关演示（无限 HP/MP）</button><p id="saveMenuNote" style="font-size:11px;color:#aeb7d9;margin-bottom:0">进度会自动保存在此浏览器中。</p></div></div>
 </div>
 <div id="controls">
  <div class="pad">
@@ -109,9 +109,10 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated;touch-acti
   <button class="control" data-key="sprint">奔跑 ⇢<small>按住加速</small></button>
   <button class="control" data-key="attack">挥鞭<small>ATTACK</small></button>
   <button class="control" data-key="magic">灵击 ✦<small>消耗 10 灵力</small></button>
+  <button class="control" data-key="interact">交互<small>开启 / 进门 · E</small></button>
  </div>
 </div>
-<div id="hint">提示：按住方向键并同时按住「奔跑」可加速移动；按住 ↓ 或触屏「下蹲」可压低身形躲避低位蓝色灵弹；遇到高位橙色灵弹则要跳跃躲避。键盘默认 L 奔跑。靠近宝箱按 ↑ 开启；收集金币、生命/灵力药水和装备。共有八个关卡，每关约一分钟并拥有不同背景与 Boss；图书馆与钟楼之间附近的隐秘石门可通往隐藏的月影密室，按 ↑ 进入并可从另一侧返回。Boss 会根据生命值进入三个阶段，使用冲刺、范围攻击、召唤亡灵与灵弹；观察 Boss 血条和阶段提示，胜利可获得金币、药水与装备奖励。点击「查看物品清单」可查看宝箱探索进度、消耗品与装备，并更换武器、防具、饰品，提升攻击、防御或移动速度。敌人会巡逻、发现、追击、攻击并返回原位。蝙蝠怕挥鞭；骷髅兵怕灵击；远程法师会发射魔弹；重甲骑士正面抗鞭，灵击或绕后更有效。击败敌人可回复少量生命与灵力。</div>
+<div id="hint">提示：按住方向键并同时按住「奔跑」可加速移动；按 E 或触屏「交互」开启宝箱/进出秘密通道；按住 ↓ 或触屏「下蹲」可压低身形躲避低位蓝色灵弹；遇到高位橙色灵弹则要跳跃躲避。键盘默认 L 奔跑。靠近宝箱按 E 交互开启；收集金币、生命/灵力药水和装备。共有八个关卡，每关约一分钟并拥有不同背景与 Boss；图书馆与钟楼之间附近的隐秘石门可通往隐藏的月影密室，按 E 交互进入并可从另一侧返回。Boss 会根据生命值进入三个阶段，使用冲刺、范围攻击、召唤亡灵与灵弹；观察 Boss 血条和阶段提示，胜利可获得金币、药水与装备奖励。点击「查看物品清单」可查看宝箱探索进度、消耗品与装备，并更换武器、防具、饰品，提升攻击、防御或移动速度。敌人会巡逻、发现、追击、攻击并返回原位。蝙蝠怕挥鞭；骷髅兵怕灵击；远程法师会发射魔弹；重甲骑士正面抗鞭，灵击或绕后更有效。击败敌人可回复少量生命与灵力。</div>
 </div>
 <div id="settingsPanel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle"><div class="settings-card"><h2 id="settingsTitle">键盘按键设置</h2><p>可以查看当前每个游戏操作对应的键盘按键，也可以点击按键进行替换。点击“等待按键”后，按下想使用的键即可。设置会保存在当前浏览器中。</p><div id="keyRows"></div><div class="settings-actions"><button id="resetKeysBtn" type="button">恢复默认</button><button id="closeSettingsBtn" type="button">完成</button></div></div></div>
 <div id="cheatPanel" role="dialog" aria-modal="true" aria-labelledby="cheatTitle" style="position:fixed;z-index:21;inset:0;background:#050817eF;display:none;align-items:center;justify-content:center;padding:16px"><div class="settings-card"><h2 id="cheatTitle">作弊功能</h2><p>仅用于单人练习和测试。开启后立即生效，可随时关闭。</p><div class="cheat-options"><div class="cheat-toggle"><span>♥ 无限生命<br><small style="color:#aeb7d9">受到攻击不扣血、不死亡</small></span><button id="infiniteHpBtn" type="button" aria-pressed="false">关闭</button></div><div class="cheat-toggle"><span>✦ 无限灵力<br><small style="color:#aeb7d9">释放灵击不消耗灵力</small></span><button id="infiniteMpBtn" type="button" aria-pressed="false">关闭</button></div></div><div id="cheatNote">当前作弊功能均已关闭。</div><div class="settings-actions" style="margin-top:14px"><button id="closeCheatBtn" type="button">完成</button></div></div></div>
@@ -122,12 +123,20 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated;touch-acti
  <div class="settings-actions" style="justify-content:flex-start;flex-wrap:wrap"><button id="upgradeAttackBtn" type="button">攻击 +1</button><button id="upgradeDefenseBtn" type="button">防御 +1</button></div>
  <p class="inventory-note">击败敌人获得经验；升级时生命上限 +10、灵力上限 +5，并恢复对应数值。每次升级获得 2 点属性点，可自由分配至攻击或防御。</p>
  <div class="inventory-section-title">🧰 宝箱探索</div><p id="chestProgress" class="inventory-note">已开启 0 / 5</p><div id="inventoryChests" style="display:grid;gap:6px;margin:8px 0"></div><div class="inventory-section-title">🧪 消耗品</div><div id="inventoryConsumables" style="display:grid;gap:8px;margin:8px 0"></div><div class="inventory-section-title">⚔️ 装备清单</div><div id="inventoryItems" style="display:grid;gap:8px;margin:8px 0"></div><div class="settings-actions"><button id="closeInventoryBtn" type="button">关闭</button></div></div></div>
+<script src="./stage-maps.js"></script>
+<script src="./save-store.js"></script>
+<script src="./audio.js"></script>
+<script src="./renderer.js"></script>
+<script src="./collision.js"></script>
+<script src="./physics.js"></script>
+<script src="./combat.js"></script>
+<script src="./enemy-ai.js"></script>
 <script>
 (() => {
 const canvas = document.getElementById('game'), ctx = canvas.getContext('2d');
 ctx.imageSmoothingEnabled = false;
-const W=480,H=270, keys={left:false,right:false,up:false,down:false,sprint:false,attack:false,magic:false};
-const hud={hpText:document.getElementById('hpText'),hpFill:document.getElementById('hpFill'),mpText:document.getElementById('mpText'),manaFill:document.getElementById('manaFill'),lootText:document.getElementById('lootText'),questFill:document.getElementById('questFill'),questPercent:document.getElementById('questPercent'),minionTask:document.getElementById('minionTask'),bossTask:document.getElementById('bossTask'),questStatus:document.getElementById('questStatus')};
+const W=480,H=270, keys={left:false,right:false,up:false,down:false,interact:false,sprint:false,attack:false,magic:false};
+const hud={hpText:document.getElementById('hpText'),hpFill:document.getElementById('hpFill'),mpText:document.getElementById('mpText'),manaFill:document.getElementById('manaFill'),lootText:document.getElementById('lootText'),questFill:document.getElementById('questFill'),questPercent:document.getElementById('questPercent'),minionTask:document.getElementById('minionTask'),bossTask:document.getElementById('bossTask'),exploreTask:document.getElementById('exploreTask'),questStatus:document.getElementById('questStatus')};
 const overlay=document.getElementById('overlay');
 const cheat={infiniteHp:false,infiniteMp:false};
 function updateCheatUI(){const hpBtn=document.getElementById('infiniteHpBtn'),mpBtn=document.getElementById('infiniteMpBtn'),note=document.getElementById('cheatNote');[[hpBtn,cheat.infiniteHp],[mpBtn,cheat.infiniteMp]].forEach(([btn,on])=>{btn.textContent=on?'开启中':'关闭';btn.classList.toggle('enabled',on);btn.setAttribute('aria-pressed',String(on))});note.textContent=cheat.infiniteHp&&cheat.infiniteMp?'无限生命与无限灵力均已开启。':cheat.infiniteHp?'无限生命已开启。':cheat.infiniteMp?'无限灵力已开启。':'当前作弊功能均已关闭。';}
@@ -138,36 +147,10 @@ document.getElementById('closeCheatBtn').addEventListener('click',closeCheats);
 document.getElementById('cheatPanel').addEventListener('pointerdown',e=>{if(e.target.id==='cheatPanel')closeCheats()});
 document.getElementById('infiniteHpBtn').addEventListener('click',()=>{cheat.infiniteHp=!cheat.infiniteHp;if(cheat.infiniteHp){player.hp=player.maxHp;player.dead=false;if(gameOver&&!won){gameOver=false;overlay.classList.add('hidden');running=true;last=performance.now();loopGeneration++;requestAnimationFrame(now=>loop(now,loopGeneration))}}updateCheatUI()});
 document.getElementById('infiniteMpBtn').addEventListener('click',()=>{cheat.infiniteMp=!cheat.infiniteMp;if(cheat.infiniteMp)player.mp=player.maxMp;updateCheatUI()});
-// Original procedural castle ambience: generated locally with Web Audio (no external audio files).
+// Audio is isolated behind a standalone module.
 const musicBtn=document.getElementById('musicBtn');
-let audioCtx=null, musicTimer=null, musicOn=false, musicStep=0;
-const melody=[
-  {n:293.66,d:0.9},{n:349.23,d:0.6},{n:392.00,d:0.9},{n:349.23,d:0.6},
-  {n:261.63,d:0.9},{n:293.66,d:0.6},{n:233.08,d:1.2},{n:0,d:0.35},
-  {n:293.66,d:0.9},{n:349.23,d:0.6},{n:440.00,d:0.9},{n:392.00,d:0.6},
-  {n:349.23,d:0.9},{n:293.66,d:0.6},{n:261.63,d:1.2},{n:0,d:0.35}
-];
-function playMusicNote(){
- if(!musicOn||!audioCtx)return;
- const item=melody[musicStep%melody.length];musicStep++;
- const now=audioCtx.currentTime;
- if(item.n>0){
-  // Soft, bell-like lead with a quiet lower drone for a moonlit gothic atmosphere.
-  const osc=audioCtx.createOscillator(), gain=audioCtx.createGain();
-  osc.type='triangle';osc.frequency.setValueAtTime(item.n,now);
-  gain.gain.setValueAtTime(0.0001,now);gain.gain.exponentialRampToValueAtTime(0.035,now+0.04);gain.gain.exponentialRampToValueAtTime(0.0001,now+item.d*0.92);
-  osc.connect(gain);gain.connect(audioCtx.destination);osc.start(now);osc.stop(now+item.d);
-  if(musicStep%4===1){const bass=audioCtx.createOscillator(),bg=audioCtx.createGain();bass.type='sine';bass.frequency.setValueAtTime(item.n/2,now);bg.gain.setValueAtTime(0.0001,now);bg.gain.exponentialRampToValueAtTime(0.012,now+0.08);bg.gain.exponentialRampToValueAtTime(0.0001,now+1.1);bass.connect(bg);bg.connect(audioCtx.destination);bass.start(now);bass.stop(now+1.12)}
- }
- musicTimer=window.setTimeout(playMusicNote,Math.max(260,item.d*1000));
-}
-async function setMusic(on){
- if(on){
-  try{const AudioContextClass=window.AudioContext||window.webkitAudioContext;if(!AudioContextClass){musicBtn.textContent='♫ 音乐不可用';return}if(!audioCtx)audioCtx=new AudioContextClass();if(audioCtx.state==='suspended')await audioCtx.resume();musicOn=true;musicBtn.textContent='♫ 音乐：开启';musicBtn.setAttribute('aria-pressed','true');playMusicNote()}catch(_e){musicOn=false;musicBtn.textContent='♫ 音乐：关闭';musicBtn.setAttribute('aria-pressed','false')}
- }else{musicOn=false;if(musicTimer)window.clearTimeout(musicTimer);musicTimer=null;if(audioCtx&&audioCtx.state==='running')audioCtx.suspend();musicBtn.textContent='♫ 音乐：关闭';musicBtn.setAttribute('aria-pressed','false')}
-}
-musicBtn.addEventListener('click',()=>setMusic(!musicOn));
-let running=false, paused=false, gameOver=false, won=false, demoMode=false, demoCheatBackup=null, last=0, camera=0, tick=0, loot=0, bossSpawned=false, minionsDefeated=0, loopGeneration=0;
+const ambience=window.MoonlitAudio.create(musicBtn);
+let running=false, paused=false, gameOver=false, won=false, demoMode=false, demoCheatBackup=null, last=0, camera=0, tick=0, loot=0, bossSpawned=false, minionsDefeated=0, loopGeneration=0, jumpBuffer=0, coyoteTime=0;
 let currentStage=1, stageStartedAt=0, stageTransitioning=false, transitionToken=0;
 const stageProfiles=[
  {name:'苍铠守门者',title:'第一关 · 月蚀前庭',sky:'#101a39',accent:'#8bd9ff',body:'#586b91',attack:'low'},
@@ -181,7 +164,7 @@ const stageProfiles=[
 ];
 function stageBossMax(n=currentStage){let hp=900;for(let i=2;i<=n;i++)hp=Math.round(hp*1.1);return hp;}
 function stageProfile(){return stageProfiles[Math.max(0,Math.min(7,currentStage-1))];}
-function configureBossForStage(n=currentStage){const profile=stageProfiles[n-1];boss.x=1300;boss.w=n===5?48:n===8?54:n===7?44:38;boss.h=n===5?58:n===8?62:n===7?54:52;boss.y=floorY-boss.h;boss.max=stageBossMax(n);boss.hp=boss.max;boss.vx=n%2?-.5:.5;boss.alive=true;boss.cd=.85;boss.flash=0;boss.attackSeq=0;boss.attackType=profile.attack;boss.phase=1;boss.dashTimer=0;boss.dashHit=false;boss.aoeTimer=0;boss.aoeHit=false;boss.summonCount=0;bossSpawned=false;stageStartedAt=performance.now();stageTransitioning=false;document.getElementById('stageNumber').textContent=n;document.getElementById('bossName').textContent='☠ '+profile.name;document.getElementById('bossPhaseText').textContent=profile.title;}
+function configureBossForStage(n=currentStage){const profile=stageProfiles[n-1],map=stageMap(n);loadStageMap(n);boss.x=map.bossX;boss.arenaMin=map.bossArena[0];boss.arenaMax=map.bossArena[1];boss.w=n===5?48:n===8?54:n===7?44:38;boss.h=n===5?58:n===8?62:n===7?54:52;boss.y=floorY-boss.h;boss.max=stageBossMax(n);boss.hp=boss.max;boss.vx=n%2?-.5:.5;boss.alive=true;boss.cd=.85;boss.flash=0;boss.attackSeq=0;boss.attackType=profile.attack;boss.phase=1;boss.dashTimer=0;boss.dashHit=false;boss.aoeTimer=0;boss.aoeHit=false;boss.summonCount=0;bossSpawned=false;stageStartedAt=performance.now();stageTransitioning=false;document.getElementById('stageNumber').textContent=n;document.getElementById('bossName').textContent='☠ '+profile.name;document.getElementById('bossPhaseText').textContent=profile.title;}
 const pauseBtn=document.getElementById("pauseBtn");
 const worldWidth=1800, floorY=226;
 // V21: the castle is divided into distinct themed rooms along the existing world.
@@ -194,19 +177,8 @@ const castleAreas=[
  {id:'secret',name:'月影密室',en:'THE HIDDEN MOON SANCTUM',start:1440,end:1800,sky:'#071c29',wall:'#123442',arch:'#23606a',accent:'#7cf4df',detail:'被遗忘的密室与月光遗物'}
 ];
 function getCastleArea(x=player.x){return castleAreas.find(a=>x>=a.start&&x<a.end)||castleAreas[castleAreas.length-1]}
-const platforms=[
- {x:0,y:226,w:290},{x:340,y:226,w:230},{x:620,y:226,w:210},{x:880,y:226,w:220},{x:1160,y:226,w:280},{x:1440,y:226,w:360},
- {x:170,y:180,w:68},{x:400,y:174,w:82},{x:690,y:184,w:78},{x:940,y:174,w:78},{x:1210,y:180,w:90},
- {x:1510,y:180,w:62},{x:1625,y:150,w:74},{x:1730,y:184,w:48}
-];
+let platforms=[],enemyStarts=[],enemies=[],chests=[],secretPassages=[],stageHazards=[],stageSwitches=[],stageObjective=null,hazardDamageTimer=0;
 const player={x:45,y:180,w:16,h:28,standH:28,crouchH:16,crouching:false,vx:0,vy:0,hp:100,maxHp:100,mp:30,maxMp:30,level:1,xp:0,nextXp:100,statPoints:0,bonusAttack:0,bonusDefense:0,face:1,onGround:false,attackT:0,attackDuration:.34,attackRange:43,attackStyle:'stand',attackHitIds:new Set(),magicT:0,invuln:0,anim:0,knockback:0,knockbackVx:0,animState:'idle',stateT:0,dead:false,hanging:false,hangPlatform:null,hangSide:'left'};
-const enemyStarts=[200,455,710,980];
-let enemies=[
- {x:200,homeX:200,y:174,w:22,h:20,hp:38,max:38,vx:.55,kind:'bat',alive:true,cd:0,state:'patrol',alert:0,phase:0},
- {x:455,homeX:455,y:198,w:20,h:28,hp:48,max:48,vx:-.4,kind:'skeleton',alive:true,cd:0,state:'patrol',alert:0,phase:0},
- {x:710,homeX:710,y:198,w:20,h:28,hp:42,max:42,vx:.4,kind:'mage',alive:true,cd:0,state:'patrol',alert:0,phase:0},
- {x:980,homeX:980,y:198,w:24,h:28,hp:88,max:88,vx:-.28,kind:'knight',alive:true,cd:0,state:'patrol',alert:0,phase:0}
-];
 const boss={x:1300,y:174,w:38,h:52,hp:240,max:240,vx:-0.5,alive:true,cd:1.1,flash:0,attackSeq:0,attackType:'low',phase:1,dashTimer:0,dashHit:false,aoeTimer:0,summonCount:0};
 const bossHud={panel:document.getElementById('bossHud'),fill:document.getElementById('bossHpFill'),hp:document.getElementById('bossHpText'),phase:document.getElementById('bossPhaseText')};
 let bossRewardGear=null;
@@ -221,13 +193,23 @@ const gearCatalog={
  swiftCharm:{id:'swiftCharm',name:'疾风护符',slot:'accessory',attack:2,defense:0,speed:18,desc:'攻击力 +2，移动速度 +18'},
  moonPendant:{id:'moonPendant',name:'月光吊坠',slot:'accessory',attack:0,defense:3,speed:0,desc:'防御 +3'}
 };
-const chests=[{x:125,y:205,w:18,h:16,contents:['gold','hp']},{x:365,y:205,w:18,h:16,contents:['silverWhip','gold']},{x:645,y:205,w:18,h:16,contents:['mp','travelerCloak']},{x:900,y:205,w:18,h:16,contents:['guardianArmor','gold']},{x:1085,y:205,w:18,h:16,contents:['moonBlade','swiftCharm','moonPendant']},{x:1590,y:205,w:18,h:16,contents:['gold','mp','moonPendant']}];
-const secretPassages=[{x:790,label:'隐秘石门',target:1480,returnX:812,kind:'entrance'},{x:1470,label:'归返石门',target:812,returnX:1490,kind:'return'}];
 let discoveredSecrets=new Set();
 const pickups=[];
+let collectedObjectives=new Set(),activatedSwitches=new Set();
+function stageMap(n=currentStage){return window.MoonlitMaps.get(n)}
+function chestKey(chest,stage=currentStage){return chest.key||stage+':'+chest.id}
+function stageSwitchKey(sw,stage=currentStage){return stage+':'+sw.id}
+function stageObjectiveKey(stage=currentStage){return stage+':'+stageMap(stage).objective.id}
+function allStageChestKeys(){return new Set(window.MoonlitMaps.all.flatMap((m,i)=>m.chests.map(c=>(i+1)+':'+c.id)))}
+function createStageEnemy(kind,x,stage){const base={bat:{w:22,h:20,hp:38,vx:.55},skeleton:{w:20,h:28,hp:48,vx:-.4},mage:{w:20,h:28,hp:42,vx:.4},knight:{w:24,h:28,hp:88,vx:-.28}}[kind]||{w:20,h:28,hp:40,vx:.4};return {x,spawnX:x,homeX:x,y:kind==='bat'?174:198,...base,hp:base.hp+Math.max(0,stage-1)*5,max:base.hp+Math.max(0,stage-1)*5,kind,alive:true,cd:0,state:'patrol',alert:0,phase:0,hitFlash:0}}
+function loadStageMap(stage=currentStage){const map=stageMap(stage);platforms=[{x:0,y:226,w:worldWidth},...map.platforms.map(([x,y,w])=>({x,y,w}))];enemyStarts=map.enemies.map(e=>e[1]);enemies=map.enemies.map(([kind,x])=>createStageEnemy(kind,x,stage));chests=map.chests.map(c=>({...c,key:stage+':'+c.id,w:18,h:16,open:inventory.openedChests.has(stage+':'+c.id)}));secretPassages=(map.secretPassages||[]).map(p=>({...p}));stageHazards=map.hazards.map(h=>({...h,y:216,h:10}));stageSwitches=map.switches.map(s=>({...s}));stageObjective={...map.objective,key:stage+':'+map.objective.id};hazardDamageTimer=0}
+loadStageMap(1);
+
 // V24: versioned, validated local save. Only plain progression data is persisted.
-const SAVE_KEY='moonlitKeepSaveV27';
-const SAVE_VERSION=27;
+const SAVE_KEY='moonlitKeepSaveV37';
+const SAVE_VERSION=37;
+const SAVE_COMPAT_VERSIONS=[27]; // Data-format compatibility, independent of game release version.
+const saveStore=window.MoonlitSaveStore.create({key:SAVE_KEY,version:SAVE_VERSION,compatibleVersions:SAVE_COMPAT_VERSIONS,legacyKeys:['moonlitKeepSaveV27'],validate:d=>!!(d&&d.player&&d.inventory&&d.world&&Number.isFinite(d.player.x)&&Number.isFinite(d.player.level)&&Array.isArray(d.inventory.items)&&Array.isArray(d.inventory.openedChests)&&Array.isArray(d.world.enemies)&&d.world.boss)});
 let lastSaveAt=0, saveNoticeTimer=null;
 function setSaveStatus(message, isError=false){
  const btn=document.getElementById('saveStatusBtn'); if(btn){btn.textContent=(isError?'⚠ ':'💾 ')+message;btn.title=isError?'存档失败：请检查浏览器存储权限或空间':'游戏进度自动保存到当前浏览器';}
@@ -236,31 +218,25 @@ function setSaveStatus(message, isError=false){
 function safeNumber(value,min,max,fallback=0){return Number.isFinite(value)?Math.max(min,Math.min(max,value)):fallback}
 function savePayload(){
  const equipment={};Object.keys(equipmentSlots).forEach(slot=>equipment[slot]=equipmentSlots[slot]?.id||null);
- return {version:SAVE_VERSION,savedAt:Date.now(),player:{x:player.x,y:player.y,hp:player.hp,maxHp:player.maxHp,mp:player.mp,maxMp:player.maxMp,level:player.level,xp:player.xp,nextXp:player.nextXp,statPoints:player.statPoints,bonusAttack:player.bonusAttack,bonusDefense:player.bonusDefense,face:player.face},inventory:{gold:inventory.gold,hpPotions:inventory.hpPotions,mpPotions:inventory.mpPotions,items:[...new Set(inventory.items)].filter(id=>!!gearCatalog[id]),openedChests:[...inventory.openedChests].filter(x=>chests.some(c=>c.x===x))},equipment,world:{currentStage,stageElapsed:Math.max(0,(performance.now()-stageStartedAt)/1000),stageTransitioning,loot,minionsDefeated,bossSpawned,won,gameOver,camera,playerDead:player.dead,discoveredSecrets:[...discoveredSecrets],enemies:enemies.map(e=>({x:e.x,y:e.y,hp:e.hp,alive:!!e.alive,kind:e.kind,spawnX:e.spawnX??e.homeX,homeX:e.homeX,cd:e.cd,state:e.state,alert:e.alert,phase:e.phase,bossSummon:!!e.bossSummon,max:e.max,w:e.w,h:e.h,vx:e.vx})),boss:{x:boss.x,y:boss.y,hp:boss.hp,alive:boss.alive,cd:boss.cd,phase:boss.phase,attackSeq:boss.attackSeq,attackType:boss.attackType,summonCount:boss.summonCount},pickups:pickups.filter(p=>p&&['gold','hp','mp',...Object.keys(gearCatalog)].includes(p.type)).map(p=>({x:p.x,y:p.y,type:p.type,vx:p.vx,vy:p.vy,life:p.life})),bossRewardGear}};
+ return {version:SAVE_VERSION,savedAt:Date.now(),player:{x:player.x,y:player.y,hp:player.hp,maxHp:player.maxHp,mp:player.mp,maxMp:player.maxMp,level:player.level,xp:player.xp,nextXp:player.nextXp,statPoints:player.statPoints,bonusAttack:player.bonusAttack,bonusDefense:player.bonusDefense,face:player.face},inventory:{gold:inventory.gold,hpPotions:inventory.hpPotions,mpPotions:inventory.mpPotions,items:[...new Set(inventory.items)].filter(id=>!!gearCatalog[id]),openedChests:[...inventory.openedChests].filter(x=>allStageChestKeys().has(x))},equipment,world:{currentStage,stageElapsed:Math.max(0,(performance.now()-stageStartedAt)/1000),stageTransitioning,loot,minionsDefeated,bossSpawned,won,gameOver,camera,playerDead:player.dead,discoveredSecrets:[...discoveredSecrets],collectedObjectives:[...collectedObjectives],activatedSwitches:[...activatedSwitches],enemies:enemies.map(e=>({x:e.x,y:e.y,hp:e.hp,alive:!!e.alive,kind:e.kind,spawnX:e.spawnX??e.homeX,homeX:e.homeX,cd:e.cd,state:e.state,alert:e.alert,phase:e.phase,bossSummon:!!e.bossSummon,max:e.max,w:e.w,h:e.h,vx:e.vx})),boss:{x:boss.x,y:boss.y,hp:boss.hp,alive:boss.alive,cd:boss.cd,phase:boss.phase,attackSeq:boss.attackSeq,attackType:boss.attackType,summonCount:boss.summonCount},pickups:pickups.filter(p=>p&&['gold','hp','mp',...Object.keys(gearCatalog)].includes(p.type)).map(p=>({x:p.x,y:p.y,type:p.type,vx:p.vx,vy:p.vy,life:p.life})),bossRewardGear}};
 }
 function saveGame(reason='自动保存',force=false){
  if(demoMode)return false;
- try{const payload=savePayload();localStorage.setItem(SAVE_KEY,JSON.stringify(payload));lastSaveAt=Date.now();setSaveStatus('已保存');refreshSaveMenu();return true}
- catch(err){setSaveStatus('保存失败',true);return false}
+ if(saveStore.write(savePayload())){lastSaveAt=Date.now();setSaveStatus('已保存');refreshSaveMenu();return true}
+ setSaveStatus('保存失败',true);return false
 }
-function readSave(){
- try{const raw=localStorage.getItem(SAVE_KEY);if(!raw)return null;const d=JSON.parse(raw);if(!d||d.version!==SAVE_VERSION||!d.player||!d.inventory||!d.world) return null;
-  const pl=d.player, inv=d.inventory, w=d.world;
-  if(!Number.isFinite(pl.x)||!Number.isFinite(pl.level)||!Array.isArray(inv.items)||!Array.isArray(inv.openedChests)||!Array.isArray(w.enemies)||!w.boss)return null;
-  return d;
- }catch(_e){return null}
-}
+function readSave(){return saveStore.read()}
 function hasValidSave(){return !!readSave()}
 function refreshSaveMenu(){const btn=document.getElementById('continueBtn');if(btn)btn.style.display=hasValidSave()?'inline-block':'none';}
-function clearSave(){try{localStorage.removeItem(SAVE_KEY)}catch(_e){}refreshSaveMenu();setSaveStatus('未保存')}
+function clearSave(){saveStore.clear();refreshSaveMenu();setSaveStatus('未保存')}
 function restoreSave(d){
  const pl=d.player,inv=d.inventory,w=d.world;
  player.x=safeNumber(pl.x,0,worldWidth-player.w,45);player.y=safeNumber(pl.y,0,H-player.h,180);player.vx=0;player.vy=0;player.hp=safeNumber(pl.hp,0,10000,100);player.maxHp=safeNumber(pl.maxHp,100,10000,100);player.hp=Math.min(player.hp,player.maxHp);player.mp=safeNumber(pl.mp,0,10000,30);player.maxMp=safeNumber(pl.maxMp,30,10000,30);player.mp=Math.min(player.mp,player.maxMp);player.level=safeNumber(pl.level,1,999,1);player.xp=safeNumber(pl.xp,0,10000000,0);player.nextXp=safeNumber(pl.nextXp,1,10000000,100);player.statPoints=safeNumber(pl.statPoints,0,100000,0);player.bonusAttack=safeNumber(pl.bonusAttack,0,100000,0);player.bonusDefense=safeNumber(pl.bonusDefense,0,100000,0);player.face=pl.face===-1?-1:1;player.dead=!!w.playerDead;player.hanging=false;player.hangPlatform=null;player.crouching=false;player.h=player.standH;player.animState='idle';player.attackT=0;player.magicT=0;player.invuln=0;
- inventory.gold=safeNumber(inv.gold,0,1e9,0);inventory.hpPotions=safeNumber(inv.hpPotions,0,1e6,0);inventory.mpPotions=safeNumber(inv.mpPotions,0,1e6,0);inventory.items=[...new Set(inv.items.filter(id=>typeof id==='string'&&gearCatalog[id]))];inventory.openedChests.clear();inv.openedChests.forEach(x=>{if(chests.some(c=>c.x===x))inventory.openedChests.add(x)});Object.keys(equipmentSlots).forEach(slot=>{const id=d.equipment&&d.equipment[slot];equipmentSlots[slot]=id&&gearCatalog[id]&&inventory.items.includes(id)&&gearCatalog[id].slot===slot?gearCatalog[id]:null});
- currentStage=safeNumber(w.currentStage,1,8,1);configureBossForStage(currentStage);stageTransitioning=!!w.stageTransitioning;loot=safeNumber(w.loot,0,1e9,0);minionsDefeated=safeNumber(w.minionsDefeated,0,10000,0);discoveredSecrets=new Set(Array.isArray(w.discoveredSecrets)?w.discoveredSecrets.filter(id=>id==='moon-sanctum'):[]);bossSpawned=!!w.bossSpawned;won=!!w.won;gameOver=!!w.gameOver;camera=safeNumber(w.camera,0,worldWidth-W,0);
+ inventory.gold=safeNumber(inv.gold,0,1e9,0);inventory.hpPotions=safeNumber(inv.hpPotions,0,1e6,0);inventory.mpPotions=safeNumber(inv.mpPotions,0,1e6,0);inventory.items=[...new Set(inv.items.filter(id=>typeof id==='string'&&gearCatalog[id]))];Object.keys(equipmentSlots).forEach(slot=>{const id=d.equipment&&d.equipment[slot];equipmentSlots[slot]=id&&gearCatalog[id]&&inventory.items.includes(id)&&gearCatalog[id].slot===slot?gearCatalog[id]:null});
+ currentStage=safeNumber(w.currentStage,1,8,1);configureBossForStage(currentStage);inventory.openedChests.clear();inv.openedChests.forEach(value=>{if(typeof value==='string'&&allStageChestKeys().has(value))inventory.openedChests.add(value);else if(typeof value==='number'){const legacy=window.MoonlitMaps.all[0].chests.find(c=>c.x===value);if(legacy)inventory.openedChests.add('1:'+legacy.id)}});collectedObjectives=new Set(Array.isArray(w.collectedObjectives)?w.collectedObjectives.filter(key=>window.MoonlitMaps.all.some((m,i)=>(i+1)+':'+m.objective.id===key)):[]);activatedSwitches=new Set(Array.isArray(w.activatedSwitches)?w.activatedSwitches.filter(key=>window.MoonlitMaps.all.some((m,i)=>m.switches.some(sw=>(i+1)+':'+sw.id===key))):[]);stageTransitioning=!!w.stageTransitioning;loot=safeNumber(w.loot,0,1e9,0);minionsDefeated=safeNumber(w.minionsDefeated,0,10000,0);discoveredSecrets=new Set(Array.isArray(w.discoveredSecrets)?w.discoveredSecrets.filter(id=>id==='moon-sanctum'):[]);bossSpawned=!!w.bossSpawned;won=!!w.won;gameOver=!!w.gameOver;camera=safeNumber(w.camera,0,worldWidth-W,0);
  enemies.length=0;w.enemies.slice(0,100).forEach((saved,i)=>{if(!saved||!['bat','skeleton','mage','knight'].includes(saved.kind))return;const max=safeNumber(saved.max,1,10000,40);enemies.push({x:safeNumber(saved.x,0,worldWidth,enemyStarts[i]||200),homeX:safeNumber(saved.homeX,0,worldWidth,saved.spawnX||200),spawnX:safeNumber(saved.spawnX,0,worldWidth,200),y:safeNumber(saved.y,0,H,198),w:safeNumber(saved.w,1,100,20),h:safeNumber(saved.h,1,100,28),hp:safeNumber(saved.hp,0,max,max),max,vx:safeNumber(saved.vx,-100,100,0),kind:saved.kind,alive:!!saved.alive,cd:safeNumber(saved.cd,0,100,0),state:['patrol','chase','return','attack'].includes(saved.state)?saved.state:'patrol',alert:safeNumber(saved.alert,0,100,0),phase:safeNumber(saved.phase,0,1e6,0),hitFlash:0,bossSummon:!!saved.bossSummon});});
  const bs=w.boss;boss.x=safeNumber(bs.x,0,worldWidth,1300);boss.y=safeNumber(bs.y,0,H,174);boss.hp=safeNumber(bs.hp,0,boss.max,boss.max);boss.alive=!!bs.alive;boss.cd=safeNumber(bs.cd,0,100,1);boss.phase=safeNumber(bs.phase,1,3,1);boss.attackSeq=safeNumber(bs.attackSeq,0,1e6,0);boss.attackType=['low','high','dash','spread','wave','crystal','vines','rift','ultimate'].includes(bs.attackType)?bs.attackType:'low';boss.summonCount=safeNumber(bs.summonCount,0,12,0);boss.w=stageProfiles[currentStage-1]?(currentStage===5?48:currentStage===8?54:currentStage===7?44:38):38;boss.h=currentStage===5?58:currentStage===8?62:currentStage===7?54:52;stageStartedAt=performance.now()-safeNumber(w.stageElapsed,0,3600,0)*1000;boss.flash=0;boss.dashTimer=0;boss.dashHit=false;boss.aoeTimer=0;
- pickups.length=0;w.pickups.slice(0,300).forEach(p=>{if(p&&['gold','hp','mp',...Object.keys(gearCatalog)].includes(p.type))pickups.push({x:safeNumber(p.x,0,worldWidth,0),y:safeNumber(p.y,0,H,0),type:p.type,vx:safeNumber(p.vx,-500,500,0),vy:safeNumber(p.vy,-500,500,0),life:safeNumber(p.life,0,1000,10)})});chests.forEach(c=>c.open=inventory.openedChests.has(c.x));projectiles.length=0;bossRewardGear=gearCatalog[d.bossRewardGear]?d.bossRewardGear:null;player.attackHitIds=new Set();player.knockback=0;player.knockbackVx=0;camera=Math.max(0,Math.min(worldWidth-W,player.x-W*.35));updateInventoryUI();updateQuest();updateBossHud();hud.hpText.textContent=Math.ceil(player.hp)+'/'+player.maxHp;hud.hpFill.style.width=(player.hp/player.maxHp*100)+'%';hud.mpText.textContent=player.mp+'/'+player.maxMp;hud.manaFill.style.width=(player.mp/player.maxMp*100)+'%';
+ pickups.length=0;w.pickups.slice(0,300).forEach(p=>{if(p&&['gold','hp','mp',...Object.keys(gearCatalog)].includes(p.type))pickups.push({x:safeNumber(p.x,0,worldWidth,0),y:safeNumber(p.y,0,H,0),type:p.type,vx:safeNumber(p.vx,-500,500,0),vy:safeNumber(p.vy,-500,500,0),life:safeNumber(p.life,0,1000,10)})});chests.forEach(c=>c.open=inventory.openedChests.has(chestKey(c)));projectiles.length=0;bossRewardGear=gearCatalog[d.bossRewardGear]?d.bossRewardGear:null;player.attackHitIds=new Set();player.knockback=0;player.knockbackVx=0;camera=Math.max(0,Math.min(worldWidth-W,player.x-W*.35));updateInventoryUI();updateQuest();updateBossHud();hud.hpText.textContent=Math.ceil(player.hp)+'/'+player.maxHp;hud.hpFill.style.width=(player.hp/player.maxHp*100)+'%';hud.mpText.textContent=player.mp+'/'+player.maxMp;hud.manaFill.style.width=(player.mp/player.maxMp*100)+'%';
  if(stageTransitioning&&!won&&!gameOver&&currentStage<8){showStageTransition();setSaveStatus('已恢复存档');return true;}
  if(won||gameOver){running=false;paused=false;pauseBtn.disabled=true;overlay.classList.remove('hidden');overlay.querySelector('.dialog').innerHTML=won?'<h1>八关征服 · 月蚀终结</h1><p>已恢复八关通关存档。你的胜利奖励仍然保留。</p><button id="endInventoryBtn">查看物品清单</button><button id="restartBtn">再玩一次</button>':'<h1>你倒下了</h1><p>已恢复倒下前的进度。你可以重新挑战，或继续后再试一次。</p><button id="restartBtn">重新挑战</button>';const ei=document.getElementById('endInventoryBtn');if(ei)ei.onclick=openInventory;document.getElementById('restartBtn').onclick=resetGame;}
  else{overlay.classList.add('hidden');overlay.querySelector('.dialog').innerHTML='';paused=false;running=true;pauseBtn.disabled=false;pauseBtn.textContent='Ⅱ 暂停';last=performance.now();loopGeneration++;requestAnimationFrame(now=>loop(now,loopGeneration));}
@@ -283,9 +259,9 @@ function updateInventoryUI(){
  document.getElementById('levelProgressFill').style.width=Math.min(100,player.xp/player.nextXp*100)+'%';
  document.getElementById('upgradeAttackBtn').disabled=player.statPoints<1;document.getElementById('upgradeDefenseBtn').disabled=player.statPoints<1;
  const chestList=document.getElementById('inventoryChests');chestList.innerHTML='';
- const opened=chests.filter(c=>inventory.openedChests.has(c.x)).length;
+ const opened=chests.filter(c=>inventory.openedChests.has(chestKey(c))).length;
  document.getElementById('chestProgress').textContent=`已开启 ${opened} / ${chests.length} · 未开启 ${chests.length-opened}`;
- chests.forEach((chest,index)=>{const row=document.createElement('div');row.className='key-row';const label=document.createElement('span');label.textContent=`宝箱 ${index+1} · ${inventory.openedChests.has(chest.x)?'已开启':'未开启'}`;const detail=document.createElement('span');detail.textContent=inventory.openedChests.has(chest.x)?'奖励已掉落':'关卡探索';detail.style.color=inventory.openedChests.has(chest.x)?'var(--mint)':'var(--muted)';row.append(label,detail);chestList.append(row)});
+ chests.forEach((chest,index)=>{const row=document.createElement('div');row.className='key-row';const label=document.createElement('span');label.textContent=`宝箱 ${index+1} · ${inventory.openedChests.has(chestKey(chest))?'已开启':'未开启'}`;const detail=document.createElement('span');detail.textContent=inventory.openedChests.has(chestKey(chest))?'奖励已掉落':'关卡探索';detail.style.color=inventory.openedChests.has(chestKey(chest))?'var(--mint)':'var(--muted)';row.append(label,detail);chestList.append(row)});
  const consumables=document.getElementById('inventoryConsumables');consumables.innerHTML='';
  const potionRow=document.createElement('div');potionRow.className='key-row';const hpLabel=document.createElement('span');hpLabel.textContent=`♥ 生命药水 × ${inventory.hpPotions}（恢复 30 HP）`;const hpBtn=document.createElement('button');hpBtn.type='button';hpBtn.textContent='使用';hpBtn.disabled=inventory.hpPotions<1||player.hp>=player.maxHp;hpBtn.onclick=()=>{if(inventory.hpPotions>0&&player.hp<player.maxHp){inventory.hpPotions--;player.hp=Math.min(player.maxHp,player.hp+30);updateInventoryUI()}};potionRow.append(hpLabel,hpBtn);consumables.append(potionRow);
  const mpRow=document.createElement('div');mpRow.className='key-row';const mpLabel=document.createElement('span');mpLabel.textContent=`✦ 灵力药水 × ${inventory.mpPotions}（恢复 15 MP）`;const mpBtn=document.createElement('button');mpBtn.type='button';mpBtn.textContent='使用';mpBtn.disabled=inventory.mpPotions<1||player.mp>=player.maxMp;mpBtn.onclick=()=>{if(inventory.mpPotions>0&&player.mp<player.maxMp){inventory.mpPotions--;player.mp=Math.min(player.maxMp,player.mp+15);updateInventoryUI()}};mpRow.append(mpLabel,mpBtn);consumables.append(mpRow);
@@ -313,136 +289,58 @@ function dropFromMonster(monster){
  else {const owned=new Set(inventory.items);const available=Object.keys(gearCatalog).filter(id=>!owned.has(id));type=available.length?available[Math.floor(Math.random()*available.length)]:['gold','hp','mp'][Math.floor(Math.random()*3)];}
  spawnPickup(type,monster.x+monster.w/2-5,monster.y+Math.max(0,monster.h/2));
 }
-function openChest(chest){if(inventory.openedChests.has(chest.x))return;inventory.openedChests.add(chest.x);chest.open=true;chest.contents.forEach((type,i)=>spawnPickup(type,chest.x+6+i*5,chest.y-13));saveGame('开启宝箱',true)}
+function openChest(chest){const key=chestKey(chest);if(inventory.openedChests.has(key))return;inventory.openedChests.add(key);chest.open=true;chest.contents.forEach((type,i)=>spawnPickup(type,chest.x+6+i*5,chest.y-13));saveGame('开启宝箱',true)}
 function collectPickup(p){if(p.type==='gold'){inventory.gold+=10;loot++}else if(p.type==='hp'){inventory.hpPotions++}else if(p.type==='mp'){inventory.mpPotions++}else if(gearCatalog[p.type]){if(!inventory.items.includes(p.type))inventory.items.push(p.type)}updateInventoryUI()}
+function collectStageObjective(){if(!stageObjective||collectedObjectives.has(stageObjective.key))return;if(overlaps(player,{x:stageObjective.x,y:stageObjective.y,w:16,h:20})){collectedObjectives.add(stageObjective.key);inventory.gold+=25;player.mp=Math.min(player.maxMp,player.mp+8);awardExperience(60);updateInventoryUI();updateQuest();setSaveStatus('探索目标完成：'+stageObjective.name);saveGame('完成探索目标',true)}}
+function activateStageSwitch(sw){const key=stageSwitchKey(sw);if(activatedSwitches.has(key))return;activatedSwitches.add(key);setSaveStatus('机关已启动：'+sw.name+' · 对应陷阱已关闭');updateQuest();saveGame('启动地图机关',true)}
+function interactWithStage(){const chest=chests.find(c=>!inventory.openedChests.has(chestKey(c))&&Math.abs((player.x+player.w/2)-(c.x+c.w/2))<27&&Math.abs((player.y+player.h)-(c.y+c.h))<35);if(chest){openChest(chest);return}const portal=secretPassages.find(p=>Math.abs((player.x+player.w/2)-(p.x+2))<34&&Math.abs((player.y+player.h)-floorY)<38);if(portal){player.x=portal.target;player.y=floorY-player.h;player.vx=0;player.vy=0;player.invuln=.45;player.hanging=false;camera=Math.max(0,Math.min(worldWidth-W,player.x-W*.35));discoveredSecrets.add('moon-sanctum');saveGame('发现秘密通道',true);setSaveStatus('发现秘密通道');return}const sw=stageSwitches.find(s=>!activatedSwitches.has(stageSwitchKey(s))&&Math.abs((player.x+player.w/2)-s.x)<28&&Math.abs((player.y+player.h)-(s.y+10))<38);if(sw)activateStageSwitch(sw)}
 // Quest progress: minion clear contributes 60%; boss damage contributes up to 40%, and victory is exactly 100%.
-function rect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),w,h)}
-function text(t,x,y,c='#f5f1dc',size=8){ctx.fillStyle=c;ctx.font=`bold ${size}px monospace`;ctx.fillText(t,Math.round(x),Math.round(y))}
-function drawProceduralBackground(){
- const area=getCastleArea();
- rect(0,0,W,H,area.sky);
- // Moonlight and stars vary subtly by room.
- rect(365-camera*.04,24,30,30,'#d5d8ed');rect(372-camera*.04,18,30,30,area.sky);
- for(let i=0;i<38;i++){let x=((i*71-camera*.18)%W+W)%W,y=(i*37)%112;rect(x,y,1,1,i%4?'#9ba9d4':area.accent)}
- // Repeating castle silhouettes are tinted to match each room.
- for(let i=0;i<8;i++){let x=((i*100-camera*.28)%600+600)%600-40;rect(x,82,60,110,area.wall);rect(x+8,66,10,24,area.arch);rect(x+38,58,12,32,area.arch);rect(x+25,101,10,18,area.sky)}
- for(let i=0;i<6;i++){let x=((i*115-camera*.48)%600+600)%600-30;rect(x,137,55,60,area.arch);rect(x+8,146,39,51,area.sky);rect(x+13,151,29,46,area.wall)}
- // Room-specific silhouettes: graves, bookshelves, clock gears, or the royal gate.
- if(area.id==='catacombs'){
-  for(let i=0;i<5;i++){const x=((i*105-camera*.38)%W+W)%W;rect(x,165,19,30,'#303148');rect(x+4,157,11,8,'#45435f');rect(x+8,169,3,10,'#7fc9c2');rect(x+6,172,7,3,'#7fc9c2')}
- }else if(area.id==='library'){
-  for(let i=0;i<4;i++){const x=((i*128-camera*.4)%W+W)%W;rect(x,104,42,90,'#3a2c4a');for(let j=0;j<5;j++)rect(x+4+j*7,116+(j%2)*3,4,67,['#c58b72','#7e9bba','#d7b86e','#9d83c5','#78b6a1'][j])}
- }else if(area.id==='clocktower'){
-  for(let i=0;i<3;i++){const x=((i*170-camera*.35)%W+W)%W;ctx.strokeStyle='#8b7891';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x+20,116,16,0,Math.PI*2);ctx.stroke();rect(x+19,104,2,13,'#ffbd78');rect(x+20,115,9,2,'#ffbd78');rect(x+3,145,34,4,'#4b526c')}
- }else if(area.id==='gatehouse'){
-  const x=220-camera*.22;rect(x,83,62,112,'#40283f');rect(x+8,94,46,101,'#190f24');rect(x+18,111,26,84,'#613c59');rect(x+28,126,6,69,'#f6ce76')
- }else if(area.id==='secret'){
-  for(let i=0;i<5;i++){const x=((i*92-camera*.34)%W+W)%W;rect(x,110,30,84,'#17414c');rect(x+5,119,20,75,'#0b2635');rect(x+9,135,12,2,'#7cf4df');rect(x+14,128,2,16,'#7cf4df')}
-  rect(250-camera*.2,70,70,3,'#7cf4df');rect(265-camera*.2,58,40,3,'#7cf4df');
- }else{
-  for(let i=0;i<3;i++){const x=((i*180-camera*.3)%W+W)%W;rect(x,92,6,76,'#493e5e');rect(x+7,92,6,76,'#493e5e');rect(x-2,90,17,5,'#b7a36e');rect(x+3,108,5,21,'#6f86b9')}
- }
- // Tall threshold arches mark the entrance/exit of every named room.
- castleAreas.slice(1).forEach(a=>{const x=a.start-camera;if(x>-42&&x<W+42){rect(x-5,105,10,121,'#514762');rect(x-2,117,4,109,'#17182e');rect(x-13,102,26,7,a.accent);rect(x-8,94,16,8,a.arch)}});
-}
-function drawBackground(){
- drawProceduralBackground();
- const tint=['rgba(5,18,52,.18)','rgba(9,36,29,.30)','rgba(43,12,54,.28)','rgba(64,19,28,.28)','rgba(4,46,66,.32)','rgba(12,50,24,.30)','rgba(43,14,68,.33)','rgba(68,10,35,.36)'][currentStage-1]||'rgba(5,12,32,.10)';
- rect(0,0,W,H,tint);
- const sp=stageProfile();
- text(sp.title,W-142,15,sp.accent,7);
- drawStageMotif();
-}
-function drawStageMotif(){
- const a=stageProfile().accent;
- if(currentStage===1){rect(375-camera*.04,28,22,22,'#dce9ff');rect(383-camera*.04,24,22,22,stageProfile().sky);}
- else if(currentStage===2){for(let i=0;i<5;i++){const x=((i*91-camera*.25)%W+W)%W;rect(x,155,14,35,'#30374d');rect(x+3,148,8,8,a);rect(x+6,162,3,11,'#0a1025')}}
- else if(currentStage===3){for(let i=0;i<4;i++){const x=((i*125-camera*.22)%W+W)%W;rect(x,96,30,91,'#332546');for(let j=0;j<4;j++)rect(x+4+j*6,110+(j%2)*5,3,67,a)}}
- else if(currentStage===4){for(let i=0;i<3;i++){const x=((i*170-camera*.2)%W+W)%W;ctx.strokeStyle=a;ctx.lineWidth=2;ctx.beginPath();ctx.arc(x+20,122,17,0,Math.PI*2);ctx.stroke();rect(x+19,107,2,15,a);rect(x+20,121,11,2,a)}}
- else if(currentStage===5){for(let i=0;i<6;i++){const x=((i*87-camera*.28)%W+W)%W;rect(x,151,5,35,a);rect(x+4,138+(i%3)*4,5,48,a);rect(x+8,160,3,26,'#d9ffff')}}
- else if(currentStage===6){for(let i=0;i<6;i++){const x=((i*85-camera*.2)%W+W)%W;rect(x,94,3,90,a);rect(x+3,117+(i%3)*7,16,3,a);rect(x+12,130,3,24,a)}}
- else if(currentStage===7){ctx.strokeStyle=a;ctx.lineWidth=2;for(let i=0;i<4;i++){ctx.beginPath();ctx.moveTo(70+i*100-camera*.18,80);ctx.lineTo(100+i*100-camera*.18,190);ctx.lineTo(130+i*100-camera*.18,80);ctx.stroke()}}
- else {rect(190-camera*.2,95,100,92,'#30152b');rect(205-camera*.2,80,70,18,a);rect(216-camera*.2,68,12,12,a);rect(252-camera*.2,68,12,12,a);rect(225-camera*.2,111,30,55,'#7d365a');}
-}
-function drawPlatform(p){
- const x=p.x-camera;if(x+p.w<0||x>W)return;
- rect(x,p.y,p.w,H-p.y,'#33324b');rect(x,p.y,p.w,4,'#b7a36e');
- for(let xx=0;xx<p.w;xx+=16){rect(x+xx,p.y+8,1,Math.max(0,H-p.y-8),'#45425d');rect(x+xx+5,p.y+17,7,1,'#242a43')}
-}
-const pixelPalettes={
- hero:{H:'#3a2438',S:'#e8c6a1',E:'#20233b',C:'#d8dbe4',M:'#35547b',R:'#8f2949',r:'#c34c68',L:'#aeb9d1',B:'#80604f',G:'#f6ce76'},
- bat:{P:'#574c86',p:'#8270bb',E:'#ff687a',W:'#7665ad',w:'#d6c8f1'},
- skeleton:{B:'#dad6c7',b:'#a8a391',E:'#25263b',T:'#786b65',A:'#737c92',W:'#b9b4a2'},
- mage:{H:'#453b78',h:'#7664b9',R:'#574b91',E:'#8bd9ff',S:'#c5b5eb',B:'#302c58'},
- knight:{S:'#b8c3d5',s:'#77839f',E:'#ffcf77',A:'#5e6b87',a:'#d0d8e7',B:'#707b95',W:'#b9c5d8'}
-};
-const pixelSprites={
- hero:['..HHHH..','.HHHHHH.','.HSSSS..','.HSSESS..','..SSSS..','...S....','..CCCCC.','R.CCCM..','RRCCMM..','.CCMMMC.','.LL.LL..','.LL.LL..','LL...LL.','BB...BB.'],
- bat:['....PP....','..PPPPPP..','.PPpPPpPP.','PPpPPPPpPP','PpPPPEPPpP','..PPPPPP..','...PppP...','..W....W..','.WW....WW.','WW......WW','..w....w..','...w..w...'],
- skeleton:['....BBBB....','...BBBBBB...','...BBEEBB...','...BBBBBB...','....BbbB....','.....BB......','...AABBAA....','..AAABBAAA...','..AABBBBBA...','...AABBBA....','...BB..BB....','...BB..BB....','...BB..BB....','..BBB..BBB...'],
- mage:['....HHHH....','...HHHHHH...','..HHHHHHHH..','...HE..EH....','....EEEE....','.....EE......','...RRRRRR....','..RRRRRRRR...','..RRRERRRR...','...RRRRRR....','...BB..BB....','...BB..BB....','...BB..BB....','..BBB..BBB...'],
- knight:['...SSSSSS....','..SSSSSSSS...','..ssEEEEss...','...SSSSSS....','...AAAAAA....','..AAAAAAAA...','..AAaAAaAA...','..AAAAAAAA...','..AAAAWAAA...','...AAAAAA....','..SS....SS...','..SS....SS...','..SS....SS...','..BBB..BBB...']
-};
-function drawPixelSprite(rows,x,y,palette,scale=2,flip=false){ctx.save();const width=Math.max(...rows.map(row=>row.length));rows=rows.map(row=>row.padEnd(width,'.'));if(flip){ctx.translate(x+width*scale,y);ctx.scale(-1,1);x=0;y=0}for(let row=0;row<rows.length;row++){for(let col=0;col<rows[row].length;col++){const color=palette[rows[row][col]];if(color)rect(x+col*scale,y+row*scale,scale,scale,color)}}ctx.restore()}
-function drawHero(){
- const x=player.x-camera,y=player.y,state=player.animState,phase=player.anim*12;
- const crouch=state==='crouch'||(state==='attack'&&player.attackStyle==='crouch');
- const hurt=state==='hurt'||(player.invuln>0&&Math.floor(tick*18)%2===0);
- if(hurt)ctx.globalAlpha=.58;
- if(state==='dead'){ctx.save();ctx.translate(x+8,y+player.h-4);ctx.rotate(player.face===1?.9:-.9);drawPixelSprite(pixelSprites.hero,-8,-24,pixelPalettes.hero,2);ctx.restore();ctx.globalAlpha=1;return}
- const bob=state==='run'?Math.abs(Math.sin(phase*1.35))*1.2:state==='jump'?-1:state==='fall'?1:state==='idle'?Math.sin(phase*.45)*.5:0;
- if(crouch)drawPixelSprite(['........','........','........','........','........','........','........','RRCCMM..','.CCMMMC.','.LL.LL..','LL...LL.','BB...BB.'],x,y+player.h-24,pixelPalettes.hero,2,player.face<0);
- else drawPixelSprite(pixelSprites.hero,x,y+bob,pixelPalettes.hero,2,player.face<0);
- if(state==='hang'){rect(x+(player.hangSide==='left'?12:0),y+2,4,3,'#e8c6a1')}
- if(player.attackT>0){const progress=1-player.attackT/player.attackDuration,reach=player.attackRange,sx=x+(player.face===1?13:3),sy=y+12+bob;let ex=sx+player.face*(progress<.28?9:progress<.68?reach:reach*.65),ey=sy+(progress<.28?-7:progress<.68?-2:5);ctx.strokeStyle='#f6ce76';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(sx,sy);ctx.quadraticCurveTo(sx+player.face*reach*.5,sy-5,ex,ey);ctx.stroke();rect(ex-1,ey-1,3,3,'#fff0b0')}
- if(player.magicT>0){rect(x-4,y-3,24,34,'#7b9cff33');rect(x+5,y+3,6,2,'#b7d7ff')}
- ctx.globalAlpha=1;
-}
-function drawEnemy(e){
- const x=e.x-camera,y=e.y;if(x<-40||x>W+40)return;
- if(e.hitFlash>0){ctx.globalAlpha=.55;e.hitFlash=Math.max(0,e.hitFlash-.025)}
- const rows=pixelSprites[e.kind];if(rows)drawPixelSprite(rows,x+(e.kind==='bat'?-1:0),y,pixelPalettes[e.kind],2,e.vx<0);
- if(e.kind==='bat'){const flap=Math.sin(tick*18+e.phase)>0?2:0;rect(x-flap,y+8,4,6,'#7665ad');rect(x+e.w+flap-4,y+8,4,6,'#7665ad')}
- if(e.kind==='knight')rect(x+20,y+11,3,14,'#b9c5d8');
- rect(x,y-5,e.w,3,'#383b51');rect(x,y-5,e.w*Math.max(0,e.hp/e.max),3,'#ff687a');
- if(e.state==='chase')text('!',x+e.w/2-2,y-10,'#ffce79',7);
- ctx.globalAlpha=1;
-}
-function drawBoss(){
- if(!bossSpawned||!boss.alive)return;
- let x=boss.x-camera,y=boss.y;if(x<-75||x>W+75)return;
- const sp=stageProfile(),c=sp.body,a=sp.accent,flash=boss.flash?'#fff2c9':c;
- // Each chapter has a distinct silhouette, palette and readable pixel-art ornament.
- if(currentStage===1){rect(x+7,y+7,24,40,flash);rect(x+3,y+2,32,15,flash);rect(x+7,y-3,6,8,a);rect(x+25,y-3,6,8,a);rect(x+10,y+10,5,4,'#ffcf77');rect(x+24,y+10,5,4,'#ffcf77');rect(x+2,y+22,8,17,c);rect(x+28,y+22,8,17,c)}
- else if(currentStage===2){rect(x+8,y+10,24,37,flash);rect(x+4,y+1,30,13,flash);rect(x+1,y-6,9,15,a);rect(x+28,y-6,9,15,a);rect(x+12,y+14,4,4,'#c9ffe5');rect(x+23,y+14,4,4,'#c9ffe5');rect(x-5,y+18,10,22,c);rect(x+33,y+18,10,22,c);rect(x+12,y+44,5,10,'#d7e3df');rect(x+23,y+44,5,10,'#d7e3df')}
- else if(currentStage===3){rect(x+9,y+12,22,35,flash);rect(x+5,y+3,30,14,flash);rect(x+2,y-7,35,6,a);rect(x+9,y-12,7,8,a);rect(x+25,y-12,7,8,a);rect(x+12,y+13,4,4,a);rect(x+23,y+13,4,4,a);rect(x+1,y+22,8,18,c);rect(x+31,y+22,8,18,c);rect(x+15,y+25,10,14,'#30214e')}
- else if(currentStage===4){rect(x+5,y+8,30,39,flash);rect(x+2,y+1,36,15,flash);rect(x+8,y-8,6,10,a);rect(x+25,y-8,6,10,a);rect(x+12,y+12,5,5,'#fff0a6');rect(x+24,y+12,5,5,'#fff0a6');rect(x-4,y+20,9,17,c);rect(x+35,y+20,9,17,c);rect(x+14,y+29,12,7,'#4b1d32')}
- else if(currentStage===5){rect(x+4,y+10,40,40,flash);rect(x+1,y+4,46,12,flash);rect(x+7,y-4,8,10,a);rect(x+33,y-4,8,10,a);rect(x+12,y+15,6,5,'#e4ffff');rect(x+29,y+15,6,5,'#e4ffff');rect(x-5,y+20,10,23,a);rect(x+43,y+20,10,23,a);rect(x+18,y+29,12,13,'#183b55')}
- else if(currentStage===6){rect(x+7,y+10,26,38,flash);rect(x+4,y+3,32,12,flash);rect(x+5,y-8,5,15,a);rect(x+30,y-8,5,15,a);rect(x+12,y+13,5,4,'#d8ffae');rect(x+24,y+13,5,4,'#d8ffae');for(let k=0;k<4;k++)rect(x-5+k*12,y+23+(k%2)*5,5,17,a);rect(x+12,y+31,15,5,'#24533b')}
- else if(currentStage===7){rect(x+7,y+9,28,39,flash);rect(x+3,y+1,36,14,flash);rect(x-7,y+4,11,26,a);rect(x+38,y+4,11,26,'#a76dff');rect(x+11,y+13,5,5,'#f8e7ff');rect(x+25,y+13,5,5,'#a5f4ff');rect(x+12,y+29,16,7,'#20143d');rect(x+10,y-5,6,7,a);rect(x+27,y-5,6,7,'#a76dff')}
- else {rect(x+7,y+17,39,31,flash);rect(x+4,y+8,43,18,flash);rect(x+3,y+2,13,12,a);rect(x+33,y+2,13,12,a);rect(x+10,y+13,7,5,'#fff5c4');rect(x+31,y+13,7,5,'#fff5c4');rect(x-8,y+23,15,9,c);rect(x+43,y+23,15,9,c);rect(x+13,y+29,25,6,'#501c42');rect(x+18,y+36,5,12,'#f6ce76');rect(x+31,y+36,5,12,'#f6ce76')}
- rect(x,y-10,boss.w,4,'#383b51');rect(x,y-10,boss.w*Math.max(0,boss.hp/boss.max),4,a);
- const labels=['灵弹 / 冲刺','镰刀突进','三重奥术弹','地裂冲击波','冰晶弹幕','荆棘缠绕','裂隙追踪弹','月蚀连击'];text(labels[currentStage-1],x-4,y-20,a,7);
-}
-function drawWorld(){
- drawBackground();
- platforms.forEach(drawPlatform);
- // Secret doors shimmer when nearby; the hidden sanctum is a real traversable extension of the world.
- secretPassages.forEach(portal=>{const x=portal.x-camera;if(x>-35&&x<W+35){rect(x-9,155,18,71,'#174d58');rect(x-5,161,10,65,'#286b70');rect(x-2,169,4,54,'#7cf4df');rect(x-12,151,24,5,'#b8fff2');if(Math.abs((player.x+player.w/2)-(portal.x+2))<42)text(portal.kind==='entrance'?'↑ 发现秘密通道':'↑ 返回古堡',x-29,143,'#b8fff2',7)}});
- // Treasure chests and collectible rewards.
- chests.forEach(c=>{const x=c.x-camera;if(x<-30||x>W+30)return;rect(x,c.y+5,c.w,c.h-5,c.open?'#5c4938':'#8a5a37');rect(x-1,c.y+2,c.w+2,7,c.open?'#6e5948':'#d49a4d');rect(x+7,c.y+7,4,5,'#f6ce76');if(!c.open)rect(x+7,c.y-1,4,4,'#ffe7a0');if(!c.open&&Math.abs((player.x+player.w/2)-(c.x+c.w/2))<30)text('↑ 开宝箱',x-8,c.y-7,'#ffe7a0',7)});
- pickups.forEach(p=>{const x=p.x-camera;if(x<-20||x>W+20)return;const bob=Math.sin(tick*5+p.phase)*2;const color=p.type==='gold'?'#f6ce76':p.type==='hp'?'#ff687a':p.type==='mp'?'#80caff':p.type==='silverWhip'||p.type==='moonBlade'?'#d7e4ff':p.type==='guardianArmor'||p.type==='travelerCloak'?'#aeb7d9':'#c59aff';rect(x,p.y+bob,8,8,color);rect(x+2,p.y+bob-2,4,12,color)});
- enemies.forEach(e=>{if(e.alive)drawEnemy(e)});
- drawBoss();drawHero();
- projectiles.forEach(p=>{let x=p.x-camera;const hostile=p.hostile;const glow=hostile?(p.attackType==='high'?'#ffb56b':p.attackType==='mage'?'#c59aff':p.attackType==='crystal'?'#8df5ff':p.attackType==='vines'?'#a7f38b':p.attackType==='rift'?'#d5a2ff':p.attackType==='ultimate'?'#ffe7a4':'#8bd9ff'):'#8bd9ff';const core=hostile?(p.attackType==='high'?'#fff0a6':p.attackType==='mage'?'#f0d8ff':p.attackType==='crystal'?'#e5ffff':p.attackType==='vines'?'#e0ffc9':p.attackType==='rift'?'#f8e7ff':p.attackType==='ultimate'?'#fff9d2':'#d8f6ff'):'#d8f6ff';rect(x,p.y, p.attackType==='ultimate'?11:8, p.attackType==='vines'?10:5,glow);rect(x+2,p.y-2,4,9,core)});
- // V21 room title and subtitle follow the player's actual world position.
- const area=getCastleArea();text(area.en,12,15,area.accent,8);text(area.name+' · '+area.detail,12,27,'#d8def5',6);if(area.id==='secret')text('秘密区域已发现 · 额外宝箱与月光遗物',12,39,'#7cf4df',7);
- if(bossSpawned&&boss.alive&&Math.abs(player.x-boss.x)<300){text('GATEKEEPER',W-86,15,'#ff9aaa',8);text('高位橙弹：跳跃  /  低位蓝弹：下蹲',W-190,27,boss.attackType==='high'?'#ffbd78':'#8bd9ff',7)}
-}
-function overlaps(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y}
-function hurt(amount){if(player.invuln>0||player.dead)return;if(cheat.infiniteHp){player.hp=player.maxHp;player.invuln=.25;return}player.hp=Math.max(0,player.hp-Math.max(1,amount-currentDefense()));player.invuln=1.0;player.knockback=.22;player.knockbackVx=player.x<((bossSpawned&&boss.alive)?boss.x:player.x+player.face*20)?-90:90;player.vy=-75;player.animState='hurt';player.stateT=.28;if(player.hp<=0){player.dead=true;player.animState='dead';gameOver=true;showEnd(false);saveGame('角色倒下',true)}}
+function isHazardActive(hazard){if(stageSwitches.some(sw=>sw.group===hazard.group&&activatedSwitches.has(stageSwitchKey(sw))))return false;if(hazard.type==='flame'||hazard.type==='rift'||hazard.type==='pendulum')return Math.sin(tick*3.2+hazard.x*.03)>.05;return true}
+const rendererState={get ctx(){return ctx},
+ get W(){return W},
+ get H(){return H},
+ get player(){return player},
+ get camera(){return camera},
+ get tick(){return tick},
+ get currentStage(){return currentStage},
+ get castleAreas(){return castleAreas},
+ get stageProfile(){return stageProfile},
+ get getCastleArea(){return getCastleArea},
+ get platforms(){return platforms},
+ get stageHazards(){return stageHazards},
+ get stageSwitches(){return stageSwitches},
+ get activatedSwitches(){return activatedSwitches},
+ get stageSwitchKey(){return stageSwitchKey},
+ get stageObjective(){return stageObjective},
+ get collectedObjectives(){return collectedObjectives},
+ get isHazardActive(){return isHazardActive},
+ get secretPassages(){return secretPassages},
+ get chests(){return chests},
+ get chestKey(){return chestKey},
+ get inventory(){return inventory},
+ get pickups(){return pickups},
+ get enemies(){return enemies},
+ get boss(){return boss},
+ get bossSpawned(){return bossSpawned},
+ get projectiles(){return projectiles},
+ get projectileBounds(){return projectileBounds},
+ get loot(){return loot}};
+const renderer=window.MoonlitRenderer.create(rendererState);
+function render(){renderer.draw()}
+const physicsState={get player(){return player},get keys(){return keys},get platforms(){return platforms},get worldWidth(){return worldWidth},get floorY(){return floorY},get H(){return H},get jumpBuffer(){return jumpBuffer},set jumpBuffer(v){jumpBuffer=v},get coyoteTime(){return coyoteTime},set coyoteTime(v){coyoteTime=v}};
+const physics=window.MoonlitPhysics.create(physicsState);
+const combatState={get player(){return player},get keys(){return keys},get enemies(){return enemies},get boss(){return boss},get bossSpawned(){return bossSpawned},get currentStage(){return currentStage},get projectiles(){return projectiles},get cheat(){return cheat},get demoMode(){return demoMode},get gameOver(){return gameOver},set gameOver(v){gameOver=v},get worldWidth(){return worldWidth},overlaps,playerHurtbox,enemyHurtbox,bossHurtbox,projectileBounds,currentAttack,currentDefense,equippedBonus,registerMinionDefeat,registerBossDefeat,showEnd,saveGame,updateCheatUI};
+const combat=window.MoonlitCombat.create(combatState);
+const enemyAIState={get player(){return player},get enemies(){return enemies},get projectiles(){return projectiles},get worldWidth(){return worldWidth},get bossSpawned(){return bossSpawned},set bossSpawned(v){bossSpawned=v},get boss(){return boss},get currentStage(){return currentStage},get loot(){return loot},get hud(){return hud},stageMap,stageProfile,hurt,playerHurtbox,enemyHurtbox,bossHurtbox,overlaps,updateBossHud};
+const enemyAI=window.MoonlitEnemyAI.create(enemyAIState);
+function overlaps(a,b){return window.MoonlitCollision.overlaps(a,b)}
+function projectileBounds(p){return window.MoonlitCollision.projectileBounds(p)}
+function playerHurtbox(){return window.MoonlitCollision.playerHurtbox(player)}
+function enemyHurtbox(e){return window.MoonlitCollision.enemyHurtbox(e)}
+function bossHurtbox(){return window.MoonlitCollision.bossHurtbox(boss,currentStage)}
+function hurt(amount){combat.hurt(amount)}
 function showEnd(win){if(demoMode){demoMode=false;if(demoCheatBackup){cheat.infiniteHp=demoCheatBackup.infiniteHp;cheat.infiniteMp=demoCheatBackup.infiniteMp;demoCheatBackup=null;updateCheatUI()}}running=false;paused=false;pauseBtn.textContent='Ⅱ 暂停';pauseBtn.disabled=true;overlay.classList.remove('hidden');overlay.querySelector('.dialog').innerHTML=win?'<h1>八关征服 · 月蚀终结</h1><p>第八关的月蚀古龙已被击败，八位 Boss 全部落败！</p><p>最终奖励：金币 +100、生命药水 +1、灵力药水 +1'+(bossRewardGear?'，并获得装备「'+gearCatalog[bossRewardGear].name+'」':'')+'。</p><p>奖励已加入物品清单，可在重新开始前查看。</p><button id="endInventoryBtn">查看胜利奖励 / 物品清单</button><button id="restartBtn">再玩一次</button>':'<h1>你倒下了</h1><p>古堡仍在等待下一位挑战者。重新开始，再试一次吧。</p><button id="restartBtn">重新挑战</button>';const endInventoryBtn=document.getElementById('endInventoryBtn');if(endInventoryBtn)endInventoryBtn.onclick=()=>{openInventory()};document.getElementById('restartBtn').onclick=resetGame}
-function updateQuest(){const total=enemies.length;const minionRatio=total?minionsDefeated/total:1;const bossRatio=boss.alive?1-boss.hp/boss.max:1;const progress=won?100:Math.min(99,Math.round(minionRatio*60+bossRatio*40));hud.questFill.style.width=progress+'%';hud.questPercent.textContent=progress+'%';hud.minionTask.textContent=(minionsDefeated>=total?'✓':'□')+' 清除小兵 '+minionsDefeated+'/'+total+'（60%）';hud.minionTask.classList.toggle('done',minionsDefeated>=total);hud.bossTask.textContent=(won?'✓':'□')+' 击败守门者（最终目标 40%）';hud.bossTask.classList.toggle('done',won);document.getElementById('stageNumber').textContent=currentStage;hud.questStatus.textContent=won?'全部完成':(stageTransitioning?'通关转场':bossSpawned?'Boss 战斗中':'探索中');}
+function updateQuest(){const total=enemies.length,minionRatio=total?minionsDefeated/total:1,bossRatio=boss.alive?1-boss.hp/boss.max:1,explored=!!stageObjective&&collectedObjectives.has(stageObjective.key);const progress=won?100:Math.min(99,Math.round(minionRatio*50+bossRatio*40+(explored?10:0)));hud.questFill.style.width=progress+'%';hud.questPercent.textContent=progress+'%';hud.minionTask.textContent=(minionsDefeated>=total?'✓':'□')+' 清除小兵 '+minionsDefeated+'/'+total+'（50%）';hud.minionTask.classList.toggle('done',minionsDefeated>=total);hud.bossTask.textContent=(won?'✓':'□')+' 击败守门者（40%）';hud.bossTask.classList.toggle('done',won);hud.exploreTask.textContent=(explored?'✓':'□')+' '+stageMap().objective.name+'（10%）';hud.exploreTask.classList.toggle('done',explored);document.getElementById('stageNumber').textContent=currentStage;hud.questStatus.textContent=won?'全部完成':(stageTransitioning?'通关转场':bossSpawned?'Boss 战斗中':'探索中')}
 function registerMinionDefeat(e){if(e.alive){e.alive=false;loot++;minionsDefeated++;dropFromMonster(e);player.hp=Math.min(player.maxHp,player.hp+7);player.mp=Math.min(player.maxMp,player.mp+5);awardExperience(({bat:25,skeleton:35,mage:40,knight:60}[e.kind]||30));updateQuest();}}
 function registerBossDefeat(){
  if(!boss.alive||stageTransitioning)return;
@@ -456,54 +354,28 @@ function registerBossDefeat(){
 function showStageTransition(){
  stageTransitioning=true;running=false;paused=false;pauseBtn.disabled=true;overlay.classList.remove('hidden');
  const elapsed=Math.max(1,Math.round((performance.now()-stageStartedAt)/1000));
- overlay.querySelector('.dialog').innerHTML='<h1>第 '+currentStage+' 关完成</h1><p>'+stageProfile().name+' 已被击败！</p><p>本关用时约 '+elapsed+' 秒。获得金币、药水与成长经验。</p><p style="color:'+stageProfile().accent+'">下一站：'+stageProfiles[currentStage].title+'<br>新 Boss · 新攻击模式 · 新场景</p><button id="nextStageBtn">进入第 '+(currentStage+1)+' 关</button><button id="endInventoryBtn">查看奖励 / 物品清单</button>';
+ overlay.querySelector('.dialog').innerHTML='<h1>第 '+currentStage+' 关完成</h1><p>'+stageProfile().name+' 已被击败！</p><p>本关用时约 '+elapsed+' 秒。获得金币、药水与成长经验。</p><p style="color:'+stageProfile().accent+'">下一站：'+stageProfiles[currentStage].title+'<br>新地图路线 · 新机关 · 新探索目标</p><button id="nextStageBtn">进入第 '+(currentStage+1)+' 关</button><button id="endInventoryBtn">查看奖励 / 物品清单</button>';
  document.getElementById('nextStageBtn').onclick=()=>startNextStage();document.getElementById('endInventoryBtn').onclick=openInventory;
  saveGame('关卡转场',true);const token=++transitionToken;window.setTimeout(()=>{if(stageTransitioning&&token===transitionToken)startNextStage()},2800);
 }
-function startNextStage(){if(!stageTransitioning)return;transitionToken++;stageTransitioning=false;currentStage=Math.min(8,currentStage+1);player.x=45;player.y=180;player.vx=0;player.vy=0;player.hp=Math.min(player.maxHp,player.hp+Math.round(player.maxHp*.35));player.mp=Math.min(player.maxMp,player.mp+Math.round(player.maxMp*.35));player.dead=false;player.invuln=1.2;camera=0;loot=0;minionsDefeated=0;bossSpawned=false;won=false;gameOver=false;enemies.splice(4);enemies.forEach((e,i)=>{e.alive=true;e.hp=e.max;e.x=enemyStarts[i]??e.spawnX??200;e.homeX=enemyStarts[i]??e.spawnX??200;e.y=e.kind==='bat'?174:198;e.cd=.2;e.state='patrol';e.alert=0;e.phase=0;e.hitFlash=0});pickups.length=0;projectiles.length=0;chests.forEach(c=>c.open=inventory.openedChests.has(c.x));configureBossForStage(currentStage);updateQuest();updateBossHud();overlay.classList.add('hidden');overlay.querySelector('.dialog').innerHTML='';pauseBtn.disabled=false;pauseBtn.textContent='Ⅱ 暂停';running=true;last=performance.now();saveGame('进入第'+currentStage+'关',true);loopGeneration++;requestAnimationFrame(now=>loop(now,loopGeneration));}
+function startNextStage(){if(!stageTransitioning)return;transitionToken++;stageTransitioning=false;currentStage=Math.min(8,currentStage+1);player.x=45;player.y=180;player.vx=0;player.vy=0;player.hp=Math.min(player.maxHp,player.hp+Math.round(player.maxHp*.35));player.mp=Math.min(player.maxMp,player.mp+Math.round(player.maxMp*.35));player.dead=false;player.invuln=1.2;camera=0;loot=0;minionsDefeated=0;bossSpawned=false;won=false;gameOver=false;pickups.length=0;projectiles.length=0;configureBossForStage(currentStage);updateQuest();updateBossHud();overlay.classList.add('hidden');overlay.querySelector('.dialog').innerHTML='';pauseBtn.disabled=false;pauseBtn.textContent='Ⅱ 暂停';running=true;last=performance.now();saveGame('进入第'+currentStage+'关',true);loopGeneration++;requestAnimationFrame(now=>loop(now,loopGeneration));}
 function updateBossHud(){
  if(!bossSpawned||!boss.alive){bossHud.panel.style.display='none';return}
  bossHud.panel.style.display='grid';const pct=Math.max(0,boss.hp/boss.max*100);bossHud.fill.style.background='linear-gradient(90deg,'+stageProfile().body+','+stageProfile().accent+')';bossHud.fill.style.width=pct+'%';bossHud.hp.textContent=Math.ceil(boss.hp)+' / '+boss.max;
  boss.phase=boss.hp>boss.max*.66?1:boss.hp>boss.max*.33?2:3;
  bossHud.phase.textContent=stageProfile().title+' · '+(boss.phase===1?'试探':boss.phase===2?'狂袭':'绝境');
 }
-function resetGame(){clearSave();demoMode=false;paused=false;pauseBtn.textContent='Ⅱ 暂停';pauseBtn.disabled=false;Object.keys(keys).forEach(k=>keys[k]=false);document.querySelectorAll('[data-key]').forEach(btn=>btn.classList.remove('active'));const oldNotice=document.getElementById('levelNotice');if(oldNotice)oldNotice.remove();player.x=45;player.y=180;player.vx=0;player.vy=0;player.hanging=false;player.hangPlatform=null;player.hp=100;player.maxHp=100;player.mp=30;player.maxMp=30;player.level=1;player.xp=0;player.nextXp=100;player.statPoints=0;player.bonusAttack=0;player.bonusDefense=0;player.invuln=0;player.attackT=0;player.magicT=0;player.attackHitIds=new Set();player.knockback=0;player.knockbackVx=0;player.animState='idle';player.stateT=0;player.dead=false;player.anim=0;player.crouching=false;player.h=player.standH;camera=0;loot=0;minionsDefeated=0;currentStage=1;stageTransitioning=false;transitionToken++;inventory.gold=0;inventory.hpPotions=0;inventory.mpPotions=0;inventory.items=[];inventory.openedChests.clear();Object.keys(equipmentSlots).forEach(k=>equipmentSlots[k]=null);pickups.length=0;chests.forEach(c=>c.open=false);discoveredSecrets.clear();updateInventoryUI();configureBossForStage(1);bossRewardGear=null;enemies.splice(4);enemies.forEach((e,i)=>{e.alive=true;e.hp=e.max;e.x=enemyStarts[i]??e.spawnX??200;e.homeX=enemyStarts[i]??e.spawnX??200;e.y=e.kind==='bat'?174:198;e.cd=0;e.state='patrol';e.alert=0;e.phase=0;e.hitFlash=0});projectiles.length=0;bossHud.panel.style.display='none';gameOver=false;won=false;updateQuest();overlay.classList.add('hidden');overlay.querySelector('.dialog').innerHTML='';running=true;last=performance.now();loopGeneration++;requestAnimationFrame(now=>loop(now,loopGeneration))}
-function attack(){
- if(player.attackT>0||player.hanging||player.dead)return;
- player.attackStyle=(keys.down&&player.onGround)||player.crouching?'crouch':'stand';
- if(player.attackStyle==='crouch'&&!player.crouching){player.y+=player.standH-player.crouchH;player.h=player.crouchH;player.crouching=true;}
- player.attackDuration=player.attackStyle==='crouch'?.38:.34;
- player.attackRange=player.attackStyle==='crouch'?34:43;
- player.attackT=player.attackDuration;
- player.attackHitIds=new Set();
- // A swing only damages a target once; hit checks run during the active frames.
-}
-function attackHitbox(){
- const progress=1-player.attackT/player.attackDuration;
- if(progress<.22||progress>.78)return null;
- const reach=player.attackRange;
- return player.attackStyle==='crouch'?{x:player.face===1?player.x+player.w-1:player.x-reach+1,y:player.y+player.h-10,w:reach,h:8}:{x:player.face===1?player.x+player.w-1:player.x-reach+1,y:player.y+5,w:reach,h:player.h-8};
-}
-function applyWhipHits(){
- const box=attackHitbox();if(!box)return;
- enemies.forEach((e,i)=>{
-   if(!e.alive||player.attackHitIds.has('e'+i)||!overlaps(box,e))return;
-   player.attackHitIds.add('e'+i);let damage=currentAttack();if(e.kind==='bat')damage*=1.35;else if(e.kind==='mage')damage*=1.25;else if(e.kind==='knight')damage*=((e.state==='chase'&&Math.abs(player.x-e.x)<80)?0.45:1.2);e.hp-=damage;e.hitFlash=.12;
-   e.x+=player.face*9;
-   if(e.hp<=0){registerMinionDefeat(e)}
- });
- if(bossSpawned&&boss.alive&&!player.attackHitIds.has('boss')&&overlaps(box,boss)){
-   player.attackHitIds.add('boss');boss.hp-=Math.max(8,currentAttack()*.75);boss.flash=.13;boss.x+=player.face*5;
-   if(boss.hp<=0){registerBossDefeat()}
- }
-}
-function castMagic(){if((!cheat.infiniteMp&&player.mp<10)||player.magicT>0)return;if(cheat.infiniteMp)player.mp=player.maxMp;else player.mp-=10;player.magicT=.3;projectiles.push({x:player.x+(player.face===1?18:-8),y:player.y+10,vx:player.face*190,life:1.8});}
+function resetGame(){clearSave();demoMode=false;paused=false;pauseBtn.textContent='Ⅱ 暂停';pauseBtn.disabled=false;Object.keys(keys).forEach(k=>keys[k]=false);document.querySelectorAll('[data-key]').forEach(btn=>btn.classList.remove('active'));const oldNotice=document.getElementById('levelNotice');if(oldNotice)oldNotice.remove();player.x=45;player.y=180;player.vx=0;player.vy=0;player.hanging=false;player.hangPlatform=null;player.hp=100;player.maxHp=100;player.mp=30;player.maxMp=30;player.level=1;player.xp=0;player.nextXp=100;player.statPoints=0;player.bonusAttack=0;player.bonusDefense=0;player.invuln=0;player.attackT=0;player.magicT=0;player.attackHitIds=new Set();player.knockback=0;player.knockbackVx=0;player.animState='idle';player.stateT=0;player.dead=false;player.anim=0;player.crouching=false;player.h=player.standH;jumpBuffer=0;coyoteTime=0;camera=0;loot=0;minionsDefeated=0;currentStage=1;stageTransitioning=false;transitionToken++;inventory.gold=0;inventory.hpPotions=0;inventory.mpPotions=0;inventory.items=[];inventory.openedChests.clear();collectedObjectives.clear();activatedSwitches.clear();Object.keys(equipmentSlots).forEach(k=>equipmentSlots[k]=null);pickups.length=0;discoveredSecrets.clear();bossRewardGear=null;configureBossForStage(1);updateInventoryUI();projectiles.length=0;bossHud.panel.style.display='none';gameOver=false;won=false;updateQuest();overlay.classList.add('hidden');overlay.querySelector('.dialog').innerHTML='';running=true;last=performance.now();loopGeneration++;requestAnimationFrame(now=>loop(now,loopGeneration));}
+function attack(){combat.attack()}
+function attackHitbox(){return combat.attackHitbox()}
+function applyWhipHits(){combat.applyWhipHits()}
+function castMagic(){combat.castMagic()}
 function startDemo(){
  // 先清除所有可能残留的按键，再重置关卡，确保从标题页、暂停页或游戏中都能启动。
  Object.keys(keys).forEach(k=>keys[k]=false);
  demoCheatBackup={infiniteHp:cheat.infiniteHp,infiniteMp:cheat.infiniteMp};
  resetGame();demoMode=true;cheat.infiniteHp=true;cheat.infiniteMp=true;updateCheatUI();
- hud.questStatus.textContent='通关演示中';
+ hud.questStatus.textContent='演示中 · 自动操作 / 无限 HP、MP';
 }
 function driveDemo(dt){
  if(!demoMode)return;
@@ -516,22 +388,20 @@ function driveDemo(dt){
  if(player.onGround&&obstacle&&obstacle.x>=player.x+player.w-12)keys.up=true;
  // Read incoming hostile trajectories and choose the matching dodge while grounded.
  const incoming=projectiles.find(p=>{if(!p.hostile||!p.vx)return false;const eta=(player.x+player.w/2-p.x)/p.vx;return eta>0&&eta<.55});
- if(incoming&&player.onGround){if(incoming.y>=player.y+7)keys.down=true;else if(incoming.y>=player.y-22)keys.up=true}
+ if(incoming&&player.onGround){const crouchClears=projectileBounds(incoming).y+projectileBounds(incoming).h<=player.y+player.standH-player.crouchH;if(incoming.attackType==='high'||!crouchClears)keys.up=true;else keys.down=true}
  if(bossSpawned&&boss.alive){
   if(boss.dashTimer>0&&Math.abs(player.x-boss.x)<105&&player.onGround)keys.up=true;
   if(boss.aoeTimer>0&&boss.aoeTimer<.55&&Math.abs(player.x-boss.x)<155&&player.onGround)keys.up=true;
  }
- const target=enemies.find(e=>e.alive&&e.x<=player.x+player.w+62);
+ const target=enemies.find(e=>e.alive&&e.x<=player.x+player.w+62&&e.x+e.w>=player.x-68);
  if(target){
   const distance=Math.abs((target.x+target.w/2)-(player.x+player.w/2));
-  if(distance<68){keys.right=false;keys.attack=true;if(target.kind==='mage'||target.kind==='knight'||target.kind==='bat')keys.magic=true}
-  // Demo assistance keeps the encounter moving, while the visible whip and magic follow real combat timing.
-  if(distance<68){target.hp-=dt*(target.kind==='bat'?135:target.kind==='knight'?95:115);target.hitFlash=.05;if(target.hp<=0)registerMinionDefeat(target)}
+  if(distance<68){keys.right=false;player.face=Math.sign(target.x+target.w/2-(player.x+player.w/2))||1;keys.attack=true;keys.magic=true;if(target.kind==='bat'&&player.onGround)keys.up=true}
  }
- if(player.x>1110&&!bossSpawned){bossSpawned=true;hud.lootText.textContent=loot+' · '+stageProfile().name+'出现！';updateBossHud()}
+ if(player.x>stageMap().bossGateX&&!bossSpawned){bossSpawned=true;hud.lootText.textContent=loot+' · '+stageProfile().name+'出现！';updateBossHud()}
  if(bossSpawned&&boss.alive){
   const distance=Math.abs((player.x+player.w/2)-(boss.x+boss.w/2));
-  if(distance<128){keys.right=false;keys.attack=true;keys.magic=true;boss.hp-=dt*155;boss.flash=.06;if(boss.hp<=0)registerBossDefeat()}
+  if(distance<128){keys.right=false;player.face=Math.sign(boss.x+boss.w/2-(player.x+player.w/2))||1;keys.attack=true;keys.magic=true}
  }
 }
 function update(dt){
@@ -560,95 +430,17 @@ function update(dt){
  if(player.animState!=='hurt'&&player.attackT<=0){if(player.crouching)player.animState='crouch';else if(!player.onGround)player.animState=player.vy<0?'jump':'fall';else if(Math.abs(inputVx)>0)player.animState='run';else player.animState='idle';}
  if(player.knockback>0){player.knockback=Math.max(0,player.knockback-dt);player.knockbackVx*=Math.max(0,1-dt*5)}
  if(inputVx)player.face=Math.sign(inputVx);
- if(keys.up){const nearby=chests.find(c=>!inventory.openedChests.has(c.x)&&Math.abs((player.x+player.w/2)-(c.x+c.w/2))<27&&Math.abs((player.y+player.h)-floorY)<35);if(nearby){openChest(nearby);keys.up=false;player.vy=0}else{const portal=secretPassages.find(p=>Math.abs((player.x+player.w/2)-(p.x+2))<34&&Math.abs((player.y+player.h)-floorY)<38);if(portal){player.x=portal.target;player.y=floorY-player.h;player.vx=0;player.vy=0;player.invuln=.45;player.hanging=false;camera=Math.max(0,Math.min(worldWidth-W,player.x-W*.35));discoveredSecrets.add('moon-sanctum');keys.up=false;saveGame('发现秘密通道',true);setSaveStatus('已发现月影密室');}}}
+ if(keys.interact){interactWithStage();keys.interact=false}
  let collectedAny=false;pickups.forEach((p,i)=>{if(overlaps(player,p)){collectPickup(p);p.collected=true;collectedAny=true}});for(let i=pickups.length-1;i>=0;i--)if(pickups[i].collected)pickups.splice(i,1);if(collectedAny)saveGame('拾取物品',true);
- if(keys.up&&player.onGround){if(player.crouching){player.y-=player.standH-player.crouchH;player.h=player.standH;player.crouching=false}player.vy=-245;player.onGround=false}
- if(keys.attack)attack();if(player.attackT>0&&player.animState!=='hurt')player.animState='attack';if(keys.magic){castMagic();keys.magic=false}
- const prevX=player.x,prevY=player.y,prevBottom=player.y+player.h;
- player.vy+=620*dt;player.x+=player.vx*dt;player.y+=player.vy*dt;
- player.x=Math.max(0,Math.min(worldWidth-player.w,player.x));player.onGround=false;
- // Raised platforms are solid walls down to the floor: the player must jump high enough to clear their top.
- // Resolve side collisions before landing checks so walking cannot phase through the visible block.
- let wallContact=null;
- for(const p of platforms){
-  if(p.y>=floorY)continue;
-  const verticalOverlap=player.y+player.h>p.y+3&&player.y<H;
-  if(!verticalOverlap)continue;
-  if(player.vx>0&&prevX+player.w<=p.x&&player.x+player.w>p.x&&player.x<p.x+p.w){player.x=p.x-player.w;wallContact={platform:p,side:'left'}}
-  else if(player.vx<0&&prevX>=p.x+p.w&&player.x<p.x+p.w&&player.x+player.w>p.x){player.x=p.x+p.w;wallContact={platform:p,side:'right'}}
-  if(wallContact)player.vx=0;
- }
- // Only use ledge-grab for platforms that exceed the player's normal jump height.
- // Lower platforms remain fully physics-driven: keep the original jump arc and timing, with no snap-to-top shortcut.
- const maxJumpRise=(245*245)/(2*620);
- if(wallContact&&!player.onGround){const p=wallContact.platform;const tooHighToClear=(floorY-p.y)>maxJumpRise+1;const handReachTop=player.y<=p.y+10&&player.y+player.h>=p.y-12;if(tooHighToClear&&handReachTop){player.hanging=true;player.hangPlatform=p;player.hangSide=wallContact.side;player.x=wallContact.side==='left'?p.x-player.w:p.x+p.w;player.y=p.y-8;player.vx=0;player.vy=0;player.animState='hang';return}}
- for(const p of platforms){if(player.x+player.w>p.x&&player.x<p.x+p.w&&player.vy>=0&&prevBottom<=p.y+12&&player.y+player.h>=p.y){player.y=p.y-player.h;player.vy=0;player.onGround=true}}
- if(player.y>H+40)hurt(100);
- enemies.forEach(e=>{
-  if(!e.alive)return;e.cd=Math.max(0,e.cd-dt);e.phase+=dt;
-  const dx=player.x-e.x,dist=Math.abs(dx),notice=e.kind==='mage'?235:e.kind==='bat'?175:150;
-  if(dist<notice){e.state='chase';e.alert=2.8}else if(e.alert>0){e.alert=Math.max(0,e.alert-dt);e.state=e.alert>0?'return':'patrol'}else if(Math.abs(e.x-e.homeX)>6)e.state='return';else e.state='patrol';
-  if(e.kind==='bat')e.y=174+Math.sin(e.phase*4)*8;
-  if(e.state==='chase'){
-   if(e.kind==='mage'){
-    if(dist>105)e.x+=Math.sign(dx)*38*dt;
-    if(dist<notice&&e.cd<=0){projectiles.push({x:e.x+(dx<0?-5:e.w),y:e.y+10,vx:(dx<0?-1:1)*105,life:2,hostile:true,attackType:'mage',source:'mage'});e.cd=1.8;e.state='attack'}
-   }else if(e.kind==='knight'){
-    if(dist>25)e.x+=Math.sign(dx)*48*dt;
-    if(dist<35&&e.cd<=0){hurt(17);e.cd=1.15;e.state='attack'}
-   }else if(e.kind==='bat'){
-    if(dist>14)e.x+=Math.sign(dx)*72*dt;
-    if(dist<25&&e.cd<=0){hurt(9);e.cd=.85;e.state='attack'}
-   }else{
-    if(dist>24)e.x+=Math.sign(dx)*55*dt;
-    if(dist<29&&e.cd<=0){hurt(11);e.cd=.9;e.state='attack'}
-   }
-  }else if(e.state==='return'){
-   const homeDx=e.homeX-e.x;if(Math.abs(homeDx)>4)e.x+=Math.sign(homeDx)*35*dt;else{e.x=e.homeX;e.state='patrol'}
-  }else if(e.state==='patrol'){
-   e.x+=e.vx*60*dt;if(Math.abs(e.x-e.homeX)>62)e.vx*=-1;
-  }
-  e.x=Math.max(0,Math.min(worldWidth-e.w,e.x));
-  if(overlaps(player,e)&&e.cd<=0&&e.kind!=='mage'){hurt(e.kind==='knight'?17:e.kind==='bat'?9:11);e.cd=e.kind==='knight'?1.15:.85}
- });
- if(player.x>1110&&!bossSpawned){bossSpawned=true;hud.lootText.textContent=loot+' · '+stageProfile().name+'出现！';updateBossHud()}
- if(bossSpawned&&boss.alive){
-  boss.phase=boss.hp>boss.max*.66?1:boss.hp>boss.max*.33?2:3;
-  boss.cd=Math.max(0,boss.cd-dt);boss.flash=Math.max(0,boss.flash-dt);
-  if(boss.dashTimer>0){boss.dashTimer=Math.max(0,boss.dashTimer-dt);boss.x+=Math.sign(player.x-boss.x)*245*dt;if(!boss.dashHit&&overlaps(player,boss)){hurt(22);boss.dashHit=true}if(boss.dashTimer===0){boss.attackType='low';boss.cd=.55}}
-  else {boss.x+=boss.vx*(boss.phase===1?42:boss.phase===2?58:68)*dt;if(boss.x<1180||boss.x>1382)boss.vx*=-1}
-  if(boss.aoeTimer>0){boss.aoeTimer=Math.max(0,boss.aoeTimer-dt);if(boss.aoeTimer<.18&&!boss.aoeHit){boss.aoeHit=true;const dist=Math.abs((player.x+player.w/2)-(boss.x+boss.w/2));if(dist<(currentStage===6?150:118))hurt((currentStage===8?26:currentStage===6?20:18)+boss.phase*2)}}
-  if(boss.cd<=0&&boss.dashTimer<=0){
-   boss.attackSeq++;const profile=stageProfile();let mode=profile.attack;
-   if(currentStage===1)mode=boss.attackSeq%2?'high':'low';
-   else if(currentStage===2)mode=boss.attackSeq%3===0?'low':'dash';
-   else if(currentStage===3)mode='spread';
-   else if(currentStage===4)mode='wave';
-   else if(currentStage===5)mode='crystal';
-   else if(currentStage===6)mode='vines';
-   else if(currentStage===7)mode='rift';
-   else mode=['ultimate','dash','wave','spread'][boss.attackSeq%4];
-   boss.attackType=mode;
-   const dir=player.x<boss.x?-1:1,originX=boss.x+(dir<0?-8:boss.w),baseCd=boss.phase===3?.92:boss.phase===2?1.18:1.42;
-   if(mode==='dash'){boss.dashTimer=currentStage===2?.95:.72;boss.dashHit=false;boss.cd=currentStage===2?1.15:1.5}
-   else if(['wave','vines'].includes(mode)){boss.aoeTimer=mode==='vines'?.85:.68;boss.aoeHit=false;boss.cd=mode==='vines'?1.55:1.65;}
-   else if(mode==='spread'||mode==='crystal'||mode==='rift'||mode==='ultimate'){
-    const count=mode==='spread'?3:mode==='crystal'?4:mode==='rift'?2:5;
-    for(let j=0;j<count;j++){const offset=j-(count-1)/2;const speed=(mode==='rift'?185:mode==='crystal'?145:mode==='ultimate'?175:132);projectiles.push({x:originX,y:mode==='crystal'?160+Math.abs(offset)*8:mode==='rift'?172+offset*8:(boss.attackSeq%2?178:198),vx:dir*speed,vy:mode==='spread'?offset*35:mode==='crystal'?offset*24:mode==='rift'?offset*48:offset*28,life:2.4,hostile:true,attackType:mode,source:'boss'});}
-    boss.cd=baseCd*(mode==='ultimate'?.78:1.12);
-   }else if(mode==='low'||mode==='high'){
-    projectiles.push({x:originX,y:mode==='high'?178:198,vx:dir*(boss.phase===3?165:125),vy:0,life:2,hostile:true,attackType:mode,source:'boss'});boss.cd=baseCd;
-   }
-   if(currentStage===3&&boss.attackSeq%3===0&&boss.summonCount<2){const sx=Math.max(1125,Math.min(1395,boss.x+(Math.random()<.5?-65:65)));const minion={x:sx,spawnX:sx,homeX:sx,y:174,w:22,h:20,hp:38,max:38,vx:.5,kind:'bat',alive:true,cd:.5,state:'chase',alert:3,phase:Math.random()*6,hitFlash:0,bossSummon:true};enemies.push(minion);boss.summonCount++;}
-   if(currentStage===6&&boss.attackSeq%2===0){projectiles.push({x:Math.max(1120,Math.min(1410,player.x+70)),y:198,vx:-40,vy:0,life:1.5,hostile:true,attackType:'vines',source:'boss'});}
-  }
- }
- updateBossHud();
- for(let i=projectiles.length-1;i>=0;i--){const p=projectiles[i];p.x+=p.vx*dt;p.y+=(p.vy||0)*dt;p.life-=dt;if(!p.hostile){enemies.forEach(e=>{if(e.alive&&overlaps({x:p.x,y:p.y,w:8,h:8},e)){const dmg=(e.kind==='skeleton'?42:e.kind==='knight'?40:e.kind==='mage'?21:24)+(equippedBonus('attack')+player.bonusAttack)*1.2;e.hp-=dmg;p.life=0;e.hitFlash=.12;if(e.hp<=0)registerMinionDefeat(e)}});if(bossSpawned&&boss.alive&&overlaps({x:p.x,y:p.y,w:8,h:8},boss)){boss.hp-=25;boss.flash=.1;p.life=0;if(boss.hp<=0){registerBossDefeat()}}}else if(overlaps({x:p.x,y:p.y,w:8,h:8},player)){hurt(p.attackType==='ultimate'?20:p.attackType==='vines'?16:p.attackType==='crystal'?14:12);p.life=0}if(p.life<=0||p.x<0||p.x>worldWidth)projectiles.splice(i,1)}
+ physics.jump(dt);if(keys.attack)attack();if(player.attackT>0&&player.animState!=='hurt')player.animState='attack';if(keys.magic){castMagic();keys.magic=false}
+ const wallGrabbed=physics.integrate(dt);if(wallGrabbed)return;
+ collectStageObjective();hazardDamageTimer=Math.max(0,hazardDamageTimer-dt);for(const hazard of stageHazards){if(hazardDamageTimer<=0&&isHazardActive(hazard)&&overlaps(player,{x:hazard.x,y:hazard.y,w:hazard.w,h:hazard.h})){hurt(hazard.type==='flame'?13:hazard.type==='rift'?15:11);hazardDamageTimer=.8;break}}
+ enemyAI.update(dt);
+ combat.updateProjectiles(dt);
  camera=Math.max(0,Math.min(worldWidth-W,player.x-W*.35));
  hud.hpText.textContent=Math.ceil(player.hp)+'/'+player.maxHp+(cheat.infiniteHp?' ∞':'');hud.hpFill.style.width=(player.hp/player.maxHp*100)+'%';hud.mpText.textContent=player.mp+'/'+player.maxMp+(cheat.infiniteMp?' ∞':'');hud.manaFill.style.width=(player.mp/player.maxMp*100)+'%';hud.lootText.textContent=loot+' · '+(bossSpawned?(boss.alive?'守门者战斗中':'已击败'):'守门者未现身');updateQuest();if(!demoMode&&Date.now()-lastSaveAt>5000)saveGame('自动保存');
 }
-function render(){ctx.clearRect(0,0,W,H);drawWorld();if(player.invuln>0&&Math.floor(tick*12)%2===0)rect(player.x-camera,player.y,player.w,player.h,'#ffffff55')}
+
 function loop(now,token=loopGeneration){if(!running||token!==loopGeneration)return;const dt=Math.min(.035,(now-last)/1000||0);last=now;update(dt);render();if(running)requestAnimationFrame(t=>loop(t,token))}
 function pauseGame(){if(!running||won||gameOver)return;saveGame('暂停时保存',true);running=false;paused=true;Object.keys(keys).forEach(k=>keys[k]=false);document.querySelectorAll('[data-key]').forEach(btn=>btn.classList.remove('active'));pauseBtn.textContent='▶ 继续';overlay.classList.remove('hidden');overlay.querySelector('.dialog').innerHTML='<h1>游戏已暂停</h1><p>当前进度已保留。准备好后可以继续冒险，或重新开始本关。</p><button id="resumeBtn">继续游戏</button><button id="pauseRestartBtn">重新开始</button>';document.getElementById('resumeBtn').onclick=resumeGame;document.getElementById('pauseRestartBtn').onclick=resetGame}
 function resumeGame(){if(!paused)return;overlay.classList.add('hidden');paused=false;running=true;pauseBtn.textContent='Ⅱ 暂停';last=performance.now();loopGeneration++;requestAnimationFrame(now=>loop(now,loopGeneration))}
@@ -661,10 +453,11 @@ document.querySelectorAll('[data-key]').forEach(btn=>{
  const up=e=>{e.preventDefault();if(k!=='attack'&&k!=='magic')keys[k]=false;else keys[k]=false;btn.classList.remove('active')};
  btn.addEventListener('pointerdown',down);btn.addEventListener('pointerup',up);btn.addEventListener('pointercancel',up);btn.addEventListener('lostpointercapture',up);
 });
-const defaultKeyMap={left:'ArrowLeft',right:'ArrowRight',up:'ArrowUp',down:'ArrowDown',sprint:'l',attack:'j',magic:'k'};
-const actionNames={left:'左移',right:'右移',up:'跳跃',down:'下蹲',sprint:'奔跑',attack:'挥鞭攻击',magic:'灵击'};
+const defaultKeyMap={left:'ArrowLeft',right:'ArrowRight',up:'ArrowUp',down:'ArrowDown',interact:'e',sprint:'l',attack:'j',magic:'k'};
+const actionNames={left:'左移',right:'右移',up:'跳跃',down:'下蹲',interact:'交互',sprint:'奔跑',attack:'挥鞭攻击',magic:'灵击'};
 let keyMap={...defaultKeyMap}, waitingForKey=null;
 try{const saved=JSON.parse(localStorage.getItem('moonlitKeepKeyMap')||'null');if(saved&&typeof saved==='object')for(const k of Object.keys(defaultKeyMap)){if(typeof saved[k]==='string'&&saved[k])keyMap[k]=saved[k]}}catch(_e){}
+if(Object.keys(keyMap).some(k=>k!=='interact'&&keyMap[k]===keyMap.interact)){const alternatives='efghuio';const replacement=[...alternatives].find(candidate=>!Object.keys(keyMap).some(k=>k!=='interact'&&keyMap[k]===candidate));if(replacement)keyMap.interact=replacement;}
 function keyLabel(key){return ({ArrowLeft:'← 方向左',ArrowRight:'→ 方向右',ArrowUp:'↑ 方向上',ArrowDown:'↓ 方向下',' ':'空格',Escape:'Esc',Enter:'Enter',Tab:'Tab',Backspace:'退格',Shift:'Shift'})[key]||key.toUpperCase()}
 function saveKeyMap(){try{localStorage.setItem('moonlitKeepKeyMap',JSON.stringify(keyMap))}catch(_e){}renderKeyRows();updateControlLabels()}
 function updateControlLabels(){document.querySelectorAll('[data-key]').forEach(btn=>{const k=btn.dataset.key;let small=btn.querySelector('small');if(small){small.textContent=`${actionNames[k]} · ${keyLabel(keyMap[k])}`}})}

@@ -1,0 +1,14 @@
+const fs=require('fs'),path=require('path'),assert=require('assert');
+const root=path.resolve(__dirname,'..'),html=fs.readFileSync(path.join(root,'index.html'),'utf8'),collision=fs.readFileSync(path.join(root,'collision.js'),'utf8'),combat=fs.readFileSync(path.join(root,'combat.js'),'utf8'),ai=fs.readFileSync(path.join(root,'enemy-ai.js'),'utf8'),sw=fs.readFileSync(path.join(root,'sw.js'),'utf8'),readme=fs.readFileSync(path.join(root,'README.md'),'utf8'),changelog=fs.readFileSync(path.join(root,'CHANGELOG.md'),'utf8');
+assert.match(collision,/function playerHurtbox\(p\).*height=crouch\?52:74/,'player hurtbox follows standing/crouching sprite proportions');
+assert.match(collision,/function enemyHurtbox\(e\).*bat:\[44,50\].*skeleton:\[46,64\].*knight:\[54,66\]/,'enemy kinds have separate combat hurtboxes');
+assert.match(collision,/function bossHurtbox\(b,currentStage\).*widths=\[108,144,114,144,168,144,168,198\].*heights=\[150,180,177,135,141,159,159,138\]/,'each Boss hurtbox follows its stage-specific drawn silhouette');
+assert.match(ai,/overlaps\(s\.playerHurtbox\(\),s\.enemyHurtbox\(e\)\)/,'enemy contact damage uses hurtbox overlap');
+assert.doesNotMatch(html,/if\(dist<(?:35|25|29)&&e\.cd<=0\)\{hurt\(/,'enemy melee damage is not triggered by the old distance-only checks');
+assert.match(combat,/overlaps\(s\.projectileBounds\(shot\),s\.enemyHurtbox\(e\)\)/,'player magic targets enemy hurtboxes');
+assert.match(combat,/overlaps\(s\.projectileBounds\(shot\),s\.playerHurtbox\(\)/,'enemy projectiles target player hurtbox');
+assert.match(combat,/overlaps\(box,s\.bossHurtbox\(\)\)/,'whip uses the Boss hurtbox');
+assert.match(sw,/moonlit-keep-v(37|38|39|40|41|42)/,'cache version bumped at least to v37');
+assert.match(readme,/V37 更新：角色外观与受击判定校准/,'README documents V37');
+assert.match(changelog,/v0\.37 — 校准放大角色的战斗受击范围/,'changelog keeps V37 history');
+console.log('PASS V37 player, enemy and Boss hurtbox calibration');
